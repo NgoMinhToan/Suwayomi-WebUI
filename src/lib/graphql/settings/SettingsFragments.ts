@@ -32,6 +32,8 @@ export const SERVER_SETTINGS = gql`
 
         # downloader
         downloadAsCbz
+        downloadComicInfoToMangaFolder
+        downloadCoverToMangaFolder
         downloadsPath
         autoDownloadNewChapters
         excludeEntryWithUnreadChapters

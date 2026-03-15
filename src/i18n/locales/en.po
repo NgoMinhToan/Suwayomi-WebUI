@@ -2756,6 +2756,14 @@ msgstr "Save"
 msgid "Save as CBZ archive"
 msgstr "Save as CBZ archive"
 
+#: src/features/downloads/screens/DownloadSettings.tsx
+msgid "Save cover (e.g. cover.jpg) in each manga download folder"
+msgstr "Save cover (e.g. cover.jpg) in each manga download folder"
+
+#: src/features/downloads/screens/DownloadSettings.tsx
+msgid "Save cover image to manga folder"
+msgstr "Save cover image to manga folder"
+
 #: src/features/source/browse/components/SourceOptions.tsx
 msgid "Save current search"
 msgstr "Save current search"
@@ -2765,6 +2773,14 @@ msgstr "Save current search"
 #: src/features/theme/components/CreateThemeDialog.tsx
 msgid "Save dynamic color theme"
 msgstr "Save dynamic color theme"
+
+#: src/features/downloads/screens/DownloadSettings.tsx
+msgid "Save manga info to manga folder"
+msgstr "Save manga info to manga folder"
+
+#: src/features/downloads/screens/DownloadSettings.tsx
+msgid "Save metadata as ComicInfo.xml in each manga download folder"
+msgstr "Save metadata as ComicInfo.xml in each manga download folder"
 
 #: src/features/source/browse/components/SourceOptions.tsx
 msgid "Save search"

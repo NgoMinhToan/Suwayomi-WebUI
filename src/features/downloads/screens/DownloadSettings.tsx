@@ -42,6 +42,8 @@ import { AppRoutes } from '@/base/AppRoute.constants.ts';
 type DownloadSettingsType = Pick<
     ServerSettings,
     | 'downloadAsCbz'
+    | 'downloadComicInfoToMangaFolder'
+    | 'downloadCoverToMangaFolder'
     | 'downloadsPath'
     | 'autoDownloadNewChapters'
     | 'autoDownloadNewChaptersLimit'
@@ -125,6 +127,28 @@ export const DownloadSettings = () => {
                 }
                 handleChange={(path) => updateSetting('downloadsPath', path)}
             />
+            <ListItem>
+                <ListItemText
+                    primary={t`Save cover image to manga folder`}
+                    secondary={t`Save cover (e.g. cover.jpg) in each manga download folder`}
+                />
+                <Switch
+                    edge="end"
+                    checked={!!downloadSettings?.downloadCoverToMangaFolder}
+                    onChange={(e) => updateSetting('downloadCoverToMangaFolder', e.target.checked)}
+                />
+            </ListItem>
+            <ListItem>
+                <ListItemText
+                    primary={t`Save manga info to manga folder`}
+                    secondary={t`Save metadata as ComicInfo.xml in each manga download folder`}
+                />
+                <Switch
+                    edge="end"
+                    checked={!!downloadSettings?.downloadComicInfoToMangaFolder}
+                    onChange={(e) => updateSetting('downloadComicInfoToMangaFolder', e.target.checked)}
+                />
+            </ListItem>
             <ListItem>
                 <ListItemText primary={t`Save as CBZ archive`} />
                 <Switch
