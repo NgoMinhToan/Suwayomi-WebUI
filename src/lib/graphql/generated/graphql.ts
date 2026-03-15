@@ -3097,6 +3097,8 @@ export type ServerSettingsFragment = {
     webUIChannel: Types.WebUiChannel;
     webUIUpdateCheckInterval: number;
     downloadAsCbz: boolean;
+    downloadComicInfoToMangaFolder: boolean;
+    downloadCoverToMangaFolder: boolean;
     downloadsPath: string;
     autoDownloadNewChapters: boolean;
     excludeEntryWithUnreadChapters: boolean;
@@ -3210,6 +3212,8 @@ export type ResetServerSettingsMutation = {
             webUIChannel: Types.WebUiChannel;
             webUIUpdateCheckInterval: number;
             downloadAsCbz: boolean;
+            downloadComicInfoToMangaFolder: boolean;
+            downloadCoverToMangaFolder: boolean;
             downloadsPath: string;
             autoDownloadNewChapters: boolean;
             excludeEntryWithUnreadChapters: boolean;
@@ -3333,6 +3337,8 @@ export type UpdateServerSettingsMutation = {
             webUIChannel: Types.WebUiChannel;
             webUIUpdateCheckInterval: number;
             downloadAsCbz: boolean;
+            downloadComicInfoToMangaFolder: boolean;
+            downloadCoverToMangaFolder: boolean;
             downloadsPath: string;
             autoDownloadNewChapters: boolean;
             excludeEntryWithUnreadChapters: boolean;
@@ -3452,6 +3458,8 @@ export type GetServerSettingsQuery = {
         webUIChannel: Types.WebUiChannel;
         webUIUpdateCheckInterval: number;
         downloadAsCbz: boolean;
+        downloadComicInfoToMangaFolder: boolean;
+        downloadCoverToMangaFolder: boolean;
         downloadsPath: string;
         autoDownloadNewChapters: boolean;
         excludeEntryWithUnreadChapters: boolean;
