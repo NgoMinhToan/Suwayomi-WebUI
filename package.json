@@ -13,6 +13,7 @@
         "test": "node -e \"console.log('imagine')\"",
         "build-md5": "find build -type f | sort | xargs md5sum | awk '{ print $1 }' | tr -d '\n' | md5sum| awk '{ print $1 }' > buildZip/md5sum ",
         "build-zip": "cd build && rev=$(git rev-list HEAD --count) && echo r$rev > revision && zip -9 -r ../buildZip/Suwayomi-WebUI-r$rev *",
+        "build-zip-with-version-tag": "cd build && echo $VERSION_TAG > revision && zip -9 -r ../buildZip/Suwayomi-WebUI-$VERSION_TAG *",
         "lint": "oxlint src tools",
         "format": "oxfmt --write .",
         "format:check": "oxfmt --check .",
