@@ -46,6 +46,7 @@ import { getErrorMessage } from '@/lib/HelperFunctions.ts';
 import { makeToast } from '@/base/utils/Toast.ts';
 import { ChapterListCard } from '@/features/chapter/components/cards/ChapterListCard.tsx';
 import { VirtuosoPersisted } from '@/lib/virtuoso/Component/VirtuosoPersisted.tsx';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 type ChapterListHeaderProps = {
     scrollbarWidth: number;
@@ -138,9 +139,8 @@ export const ChapterList = ({
     } = requestManager.useGetMangaChapters<GetChaptersMangaQuery, GetChaptersMangaQueryVariables>(
         GET_CHAPTERS_MANGA,
         manga.id,
-        { notifyOnNetworkStatusChange: true },
     );
-    const chapters = useMemo(() => chaptersData?.chapters.nodes ?? [], [chaptersData?.chapters.nodes]);
+    const chapters = chaptersData?.chapters.nodes ?? STABLE_EMPTY_ARRAY;
 
     const visibleChapters = useMemo(() => filterAndSortChapters(chapters, options), [chapters, options]);
     const visibleChapterIds = useMemo(() => Chapters.getIds(visibleChapters), [visibleChapters]);
@@ -188,9 +188,11 @@ export const ChapterList = ({
             <Stack direction="column" sx={{ position: 'relative', flexBasis: '60%' }}>
                 <ChapterListHeader
                     ref={setChapterListHeaderRef}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
+                    sx={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}
                     scrollbarWidth={scrollbarWidth}
                 >
                     <Stack>

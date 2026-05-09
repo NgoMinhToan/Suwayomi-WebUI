@@ -27,6 +27,7 @@ import type { GetTrackersSettingsQuery } from '@/lib/graphql/generated/graphql.t
 import type { MetadataTrackingSettings } from '@/features/tracker/Tracker.types.ts';
 import { getErrorMessage } from '@/lib/HelperFunctions.ts';
 import { useAppTitle } from '@/features/navigation-bar/hooks/useAppTitle.ts';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 export const TrackingSettings = () => {
     const { t } = useLingui();
@@ -47,10 +48,8 @@ export const TrackingSettings = () => {
         loading: areTrackersLoading,
         error: trackersError,
         refetch: refetchTrackersList,
-    } = requestManager.useGetTrackerList<GetTrackersSettingsQuery>(GET_TRACKERS_SETTINGS, {
-        notifyOnNetworkStatusChange: true,
-    });
-    const trackers = data?.trackers.nodes ?? [];
+    } = requestManager.useGetTrackerList<GetTrackersSettingsQuery>(GET_TRACKERS_SETTINGS);
+    const trackers = data?.trackers.nodes ?? STABLE_EMPTY_ARRAY;
 
     const loading = areMetadataServerSettingsLoading || areTrackersLoading;
     const error = metadataServerSettingsError ?? trackersError;

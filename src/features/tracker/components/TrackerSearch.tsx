@@ -40,6 +40,7 @@ import type { TrackerIdInfo, TTrackerBind } from '@/features/tracker/Tracker.typ
 import { Tracker } from '@/features/tracker/Tracker.types.ts';
 import { CustomButtonIcon } from '@/base/components/buttons/CustomButtonIcon.tsx';
 import { CustomTooltip } from '@/base/components/CustomTooltip.tsx';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 const TrackButton = ({
     mangaId,
@@ -116,24 +117,24 @@ export const TrackerSearch = ({
     tracker,
     closeSearchMode,
     trackedId,
+    trackedTitle,
 }: {
     manga: MangaIdInfo & Pick<MangaType, 'title'>;
     tracker: TTrackerBind;
     closeSearchMode: () => void;
     trackedId?: string;
+    trackedTitle?: string;
 }) => {
     const { t } = useLingui();
     const getOptionForDirection = useGetOptionForDirection();
 
-    const [searchString, setSearchString] = useState<string>(manga.title);
+    const [searchString, setSearchString] = useState<string>(trackedTitle ?? manga.title);
     const [tmpSearchString, setTmpSearchString] = useState(searchString);
 
     const [selectedTrackerRemoteId, setSelectedTrackerRemoteId] = useState<string | undefined>(trackedId);
 
-    const trackerSearch = requestManager.useTrackerSearch(tracker.id, searchString, {
-        notifyOnNetworkStatusChange: true,
-    });
-    const searchResults = trackerSearch.data?.searchTracker.trackSearches ?? [];
+    const trackerSearch = requestManager.useTrackerSearch(tracker.id, searchString);
+    const searchResults = trackerSearch.data?.searchTracker.trackSearches ?? STABLE_EMPTY_ARRAY;
 
     const hasResults = !!searchResults.length;
     const hasNoResults = !trackerSearch.loading && !trackerSearch.error && !hasResults;
@@ -178,31 +179,33 @@ export const TrackerSearch = ({
                             }
                         }}
                         onCancel={() => setTmpSearchString('')}
-                        InputProps={{
-                            startAdornment: tracker.id === Tracker.MYANIMELIST && (
-                                <InputAdornment position="start">
-                                    <PopupState variant="popover" popupId="tracker-search-info">
-                                        {(popupState) => (
-                                            <>
-                                                <IconButton {...bindTrigger(popupState)} color="inherit">
-                                                    <InfoIcon />
-                                                </IconButton>
-                                                <Popover
-                                                    {...bindPopover(popupState)}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'left',
-                                                    }}
-                                                >
-                                                    <Typography sx={{ padding: 1, whiteSpace: 'pre-line' }}>
-                                                        {t`Search for a ID via "id:<ID>" (e.g. "id:13")\nLimit search to your lists via "my:<Title>" (e.g. "my:One Piece")`}
-                                                    </Typography>
-                                                </Popover>
-                                            </>
-                                        )}
-                                    </PopupState>
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            input: {
+                                startAdornment: tracker.id === Tracker.MYANIMELIST && (
+                                    <InputAdornment position="start">
+                                        <PopupState variant="popover" popupId="tracker-search-info">
+                                            {(popupState) => (
+                                                <>
+                                                    <IconButton {...bindTrigger(popupState)} color="inherit">
+                                                        <InfoIcon />
+                                                    </IconButton>
+                                                    <Popover
+                                                        {...bindPopover(popupState)}
+                                                        anchorOrigin={{
+                                                            vertical: 'bottom',
+                                                            horizontal: 'left',
+                                                        }}
+                                                    >
+                                                        <Typography sx={{ padding: 1, whiteSpace: 'pre-line' }}>
+                                                            {t`Search for a ID via "id:<ID>" (e.g. "id:13")\nLimit search to your lists via "my:<Title>" (e.g. "my:One Piece")`}
+                                                        </Typography>
+                                                    </Popover>
+                                                </>
+                                            )}
+                                        </PopupState>
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                     />
                 </Stack>

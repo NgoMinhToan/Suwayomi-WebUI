@@ -33,6 +33,7 @@ import { useAppTitle } from '@/features/navigation-bar/hooks/useAppTitle.ts';
 import { useAppAction } from '@/features/navigation-bar/hooks/useAppAction.ts';
 import type { ChapterDownloadStatus } from '@/features/chapter/Chapter.types.ts';
 import { VirtuosoPersisted } from '@/lib/virtuoso/Component/VirtuosoPersisted.tsx';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 export const DownloadQueue: React.FC = () => {
     const { t } = useLingui();
@@ -41,15 +42,10 @@ export const DownloadQueue: React.FC = () => {
 
     const [reorderDownload, { reset: revertReorder }] = requestManager.useReorderChapterInDownloadQueue();
 
-    const {
-        data: downloadStatusData,
-        loading: isLoading,
-        error,
-        refetch,
-    } = requestManager.useGetDownloadStatus({ notifyOnNetworkStatusChange: true });
+    const { data: downloadStatusData, loading: isLoading, error, refetch } = requestManager.useGetDownloadStatus();
     const downloaderData = downloadStatusData?.downloadStatus;
 
-    const queue = downloaderData?.queue ?? [];
+    const queue = downloaderData?.queue ?? STABLE_EMPTY_ARRAY;
     const status = downloaderData?.state ?? DownloaderState.Started;
     const isQueueEmpty = !queue.length;
 

@@ -11,7 +11,7 @@
     "eslint-plugin-no-relative-import-paths",
     "eslint-plugin-unused-imports",
     "eslint-plugin-no-only-tests",
-    "./tools/eslint-plugin-header.cjs"
+    "@tony.ganchev/eslint-plugin-header"
   ],
   "categories": {
     "correctness": "off"
@@ -159,12 +159,20 @@
               "!@mui/material/",
               "!@mui/icons-material/",
               "!@mui/x-date-pickers/"
-            ]
+            ],
           },
           {
             "group": [
               "@mui/*/*/*"
             ]
+          },
+          {
+            "group": [
+              "lodash",
+              "lodash/*",
+              "!lodash/fp/*"
+            ],
+            "message": "Use lodash-fp instead."
           }
         ]
       }
@@ -361,7 +369,7 @@
     "no-only-tests/no-only-tests": "error",
 
     // ── License header ──
-    "header/header": ["error", "block", [
+    "@tony.ganchev/header/header": ["error", "block", [
       "",
       " * Copyright (C) Contributors to the Suwayomi project",
       " *",
@@ -411,6 +419,7 @@
         "src/features/authentication/AuthManager.ts",
         "src/features/chapter/services/Chapters.ts",
         "src/features/metadata/services/MetadataMigrations.ts",
+        "src/features/migration/MigrationManager.ts",
         "src/features/reader/services/ReaderControls.ts",
         "src/features/reader/services/ReaderService.ts",
         "src/features/source/services/Sources.ts",

@@ -21,6 +21,7 @@ import { getErrorMessage } from '@/lib/HelperFunctions.ts';
 import { ChapterHistoryCard } from '@/features/history/components/ChapterHistoryCard.tsx';
 import { Chapters } from '@/features/chapter/services/Chapters.ts';
 import { useAppTitle } from '@/features/navigation-bar/hooks/useAppTitle.ts';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 export const History: React.FC = () => {
     const { t } = useLingui();
@@ -35,11 +36,10 @@ export const History: React.FC = () => {
         refetch,
     } = requestManager.useGetRecentlyReadChapters(undefined, {
         fetchPolicy: 'cache-and-network',
-        notifyOnNetworkStatusChange: true,
     });
     const hasNextPage = !!chapterHistoryData?.chapters.pageInfo.hasNextPage;
     const endCursor = chapterHistoryData?.chapters.pageInfo.endCursor;
-    const readEntries = chapterHistoryData?.chapters.nodes ?? [];
+    const readEntries = chapterHistoryData?.chapters.nodes ?? STABLE_EMPTY_ARRAY;
     const groupedHistory = useMemo(
         () => Object.entries(Chapters.groupByDate(readEntries, 'lastReadAt')),
         [readEntries],

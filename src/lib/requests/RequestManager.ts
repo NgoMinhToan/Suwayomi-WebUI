@@ -212,6 +212,8 @@ import type {
     DeleteChapterMetasInput,
     SetCategoryMetasInput,
     DeleteCategoryMetasInput,
+    RefreshMangaMutation,
+    RefreshMangaMutationVariables,
 } from '@/lib/graphql/generated/graphql.ts';
 import {
     CategoryOrderBy,
@@ -240,6 +242,7 @@ import { GET_MIGRATABLE_SOURCES, GET_SOURCES_LIST } from '@/lib/graphql/source/S
 import {
     GET_MANGA_FETCH,
     GET_MANGA_TO_MIGRATE_TO_FETCH,
+    REFRESH_MANGA,
     UPDATE_MANGA,
     UPDATE_MANGA_CATEGORIES,
     UPDATE_MANGA_METADATA,
@@ -1314,7 +1317,7 @@ export class RequestManager {
                 hasPostUpdateDeletions:
                     !!postUpdateDeleteInput.keys?.length || !!postUpdateDeleteInput.prefixes?.length,
                 migrateInput,
-                isMigration: !!updateInput.metas.length,
+                isMigration: !!migrateInput.metas.length,
             },
             {
                 optimisticResponse: {
@@ -1446,7 +1449,32 @@ export class RequestManager {
             GQLMethod.USE_MUTATION,
             GET_EXTENSIONS_FETCH,
             {},
-            { refetchQueries: [GET_EXTENSIONS], ...options },
+            {
+                ...options,
+                update(cache, { data: mutationData }) {
+                    if (!mutationData?.fetchExtensions?.extensions) {
+                        return;
+                    }
+
+                    cache.writeQuery({
+                        query: GET_EXTENSIONS,
+                        data: {
+                            extensions: {
+                                __typename: 'ExtensionNodeList',
+                                nodes: mutationData.fetchExtensions.extensions,
+                                pageInfo: {
+                                    __typename: 'PageInfo',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                    startCursor: null,
+                                    endCursor: null,
+                                },
+                                totalCount: mutationData.fetchExtensions.extensions.length,
+                            },
+                        },
+                    });
+                },
+            },
         );
         const [, setUpdatedCache] = useState({});
 
@@ -2190,6 +2218,20 @@ export class RequestManager {
                 },
             },
             options,
+        );
+    }
+
+    public refreshManga(
+        mangaId: number | string,
+        options?: MutationOptions<RefreshMangaMutation, RefreshMangaMutationVariables>,
+    ): AbortableApolloMutationResponse<RefreshMangaMutation> {
+        return this.doRequest<RefreshMangaMutation, RefreshMangaMutationVariables>(
+            GQLMethod.MUTATION,
+            REFRESH_MANGA,
+            {
+                id: Number(mangaId),
+            },
+            { refetchQueries: [GET_CHAPTERS_MANGA], errorPolicy: 'all', ...options },
         );
     }
 
@@ -3518,6 +3560,12 @@ export class RequestManager {
                 },
             } as SubscriptionHookOptions<UpdaterSubscription, UpdaterSubscriptionVariables>,
         ) as useSubscription.Result<UpdaterSubscription>;
+    }
+
+    public getServerSettings(
+        options?: QueryOptions<GetServerSettingsQueryVariables>,
+    ): AbortabaleApolloQueryResponse<GetServerSettingsQuery> {
+        return this.doRequest(GQLMethod.QUERY, GET_SERVER_SETTINGS, undefined, options);
     }
 
     public useGetServerSettings(

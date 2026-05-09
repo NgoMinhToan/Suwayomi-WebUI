@@ -33,20 +33,19 @@ import {
     toValidServerConversions,
 } from '@/features/settings/ImageProcessing.utils.ts';
 import { Processing } from '@/features/settings/components/images/Processing.tsx';
+import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 
 export const ImageProcessingSetting = ({ type }: { type: ImageProcessingType }) => {
     const { t } = useLingui();
 
     useAppTitle(t(IMAGE_PROCESSING_TYPE_TO_TRANSLATION[type]));
 
-    const { data, loading, error, refetch } = requestManager.useGetServerSettings({
-        notifyOnNetworkStatusChange: true,
-    });
+    const { data, loading, error, refetch } = requestManager.useGetServerSettings();
     const [mutateSettings] = requestManager.useUpdateServerSettings();
 
     const settingKey = IMAGE_PROCESSING_TYPE_TO_SETTING[type];
 
-    const conversions = data?.settings?.[settingKey] ?? [];
+    const conversions = data?.settings?.[settingKey] ?? STABLE_EMPTY_ARRAY;
 
     const [tmpConversions, setTmpConversions] = useState(
         normalizeConversions(maybeAddDefault(addStableIdToConversions(conversions))),

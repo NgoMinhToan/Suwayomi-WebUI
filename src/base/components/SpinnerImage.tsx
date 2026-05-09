@@ -8,6 +8,7 @@
 
 import type { Ref } from 'react';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { STABLE_EMPTY_OBJECT } from '@/base/Base.constants.ts';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -61,7 +62,7 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
         alt,
         onLoad,
         onError,
-        spinnerStyle: { small, ...spinnerStyle } = {},
+        spinnerStyle: { small, ...spinnerStyle } = STABLE_EMPTY_OBJECT,
         imgStyle,
         hideImgStyle,
         priority,
@@ -74,13 +75,15 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
 
     const showMissingImageIcon = !src.length;
 
-    const previousSrc = usePrevious(src);
-
     const [imageSourceUrl, setImageSourceUrl] = useState<string>();
     const [imgLoadRetryKey, setImgLoadRetryKey] = useState(0);
     const [isLoading, setIsLoading] = useState<boolean>();
     const [hasError, setHasError] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+
+    const previousSrc = usePrevious(src);
+    const previousImgLoadRetryKey = usePrevious(imgLoadRetryKey);
+    const previousRetryKeyPrefix = usePrevious(retryKeyPrefix);
 
     const updateImageState = (loading: boolean, error: boolean = false, aborted: boolean = false) => {
         setIsLoading(loading);
@@ -104,15 +107,29 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
         const didSrcChange = previousSrc !== src;
         const isLoadedAndSrcUnchanged = !!imageSourceUrl && !didSrcChange;
 
-        if (showMissingImageIcon || !shouldLoad || isLoadedAndSrcUnchanged) {
+        const isLocalRetry =
+            hasError && previousImgLoadRetryKey !== undefined && previousImgLoadRetryKey !== imgLoadRetryKey;
+        const isGlobalRetry =
+            hasError && previousRetryKeyPrefix !== undefined && previousRetryKeyPrefix !== retryKeyPrefix;
+        const isRetry = isLocalRetry || isGlobalRetry;
+
+        const finalShouldLoad = shouldLoad || isRetry;
+
+        if (showMissingImageIcon || !finalShouldLoad || isLoadedAndSrcUnchanged) {
             return () => {};
         }
 
+        let isAborted = false;
         let imageRequest: ImageRequest = {
             response: Promise.resolve(''),
             cleanup: noOp,
             abortRequest: noOp,
             fromCache: false,
+        };
+        const abortRequest = () => {
+            isAborted = true;
+            imageRequest.cleanup();
+            imageRequest.abortRequest(new Error('Component was unmounted'));
         };
         const fetchImage = async () => {
             try {
@@ -123,6 +140,12 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
                     disableCors,
                     ignoreQueue,
                 });
+
+                // In case the request got aborted before it was queued, the abort was called against the "default noop" function and did nothing.
+                // Thus, abort again to ensure that the actual queued request gets aborted.
+                if (isAborted) {
+                    abortRequest();
+                }
 
                 if (!imageRequest.fromCache) {
                     updateImageState(true);
@@ -142,8 +165,7 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
         fetchImage().catch(() => {});
 
         return () => {
-            imageRequest.cleanup();
-            imageRequest.abortRequest(new Error('Component was unmounted'));
+            abortRequest();
         };
     }, [src, imgLoadRetryKey, retryKeyPrefix, showMissingImageIcon, shouldLoad]);
 

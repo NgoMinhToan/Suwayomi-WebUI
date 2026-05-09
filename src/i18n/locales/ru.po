@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-12T20:43:50.916Z\n"
-"PO-Revision-Date: 2026-02-06 21:01+0000\n"
-"Last-Translator: Sazuru <sazuru@gmail.com>\n"
+"PO-Revision-Date: 2026-03-21 11:09+0000\n"
+"Last-Translator: moron1717 <spai8774766@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/suwayomi/"
 "suwayomi-webui/ru/>\n"
 "Language: ru\n"
@@ -13,7 +13,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Message-Format: ICU\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: src/features/navigation-bar/NavigationBar.constants.ts
 msgid "{count} remaining"
@@ -200,7 +201,7 @@ msgstr "Автоматические обновления"
 
 #: src/features/settings/components/webUI/WebUIUpdateIntervalSetting.tsx
 msgid "Automatically download the latest version"
-msgstr "Автоматически загружать новейшую версию"
+msgstr "Автоматически загружать последнюю версию"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Automatically mark chapters as read when you download them."
@@ -307,7 +308,9 @@ msgstr "Ненадолго показать текущий режим когда
 
 #: src/features/reader/settings/behaviour/ReaderBehaviourSettings.tsx
 msgid "Briefly show tap zone layout preview when reader is opened or layout got changed"
-msgstr "Ненадолго показать деление на зоны нажатий когда читалка открыта или раскладка зон меняться"
+msgstr ""
+"Ненадолго показать деление на зоны нажатий когда читалка открыта или "
+"раскладка зон изменилась"
 
 #: src/features/theme/Themes.ts
 msgid "Bright Pink"
@@ -376,7 +379,7 @@ msgstr "Тайм-аут запроса"
 #: src/features/category/components/CategoriesInclusionSetting.tsx
 #: src/features/category/components/CategorySelect.tsx
 #: src/features/category/components/CreateOrEditCategoryDialog.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 #: src/features/reader/hotkeys/settings/components/RecordHotkey.tsx
 #: src/features/settings/components/globalUpdate/GlobalUpdateSettingsEntries.tsx
 #: src/features/source/browse/components/SourceOptions.tsx
@@ -468,7 +471,8 @@ msgstr "Описание"
 
 #: src/features/settings/components/globalUpdate/GlobalUpdateSettings.tsx
 msgid "Check for new cover and details when updating library"
-msgstr "Проверяйте наличие новой обложки и других сведений при обновлении библиотеки"
+msgstr ""
+"Проверить наличие новой обложки и других сведений при обновлении библиотеки"
 
 #: src/features/source/browse/screens/SourceMangas.tsx
 msgid "Check out"
@@ -563,7 +567,7 @@ msgstr "Бесшовное отображение глав"
 
 #: src/features/reader/settings/ReaderSettings.constants.tsx
 msgid "Continuous horizontal"
-msgstr "Непрерывная горизонтальная"
+msgstr "Продолжать горизонтально"
 
 #: src/features/reader/settings/ReaderSettings.constants.tsx
 msgid "Continuous vertical"
@@ -574,9 +578,11 @@ msgid ""
 "Controls the MimeType that Suwayomi sends in OPDS entries for CBZ archives. Also affects global CBZ download.\n"
 "Modern follows recent IANA standard (2017), while LEGACY (deprecated mimetype for .cbz) and COMPATIBLE (deprecated mimetype for all comic archives) might be more compatible with older clients."
 msgstr ""
-"Управляет MIME-типом, который Suwayomi отправляет в OPDS-записях для CBZ архивов. Также влияет на глобальную загрузку CBZ.\n"
-"MODERN следует современному стандарту IANA (2017), тогда как LEGACY (устаревший MIME-тип для .cbz) и COMPATIBLE (устаревший MIME-тип для всех комикс-архивов) могут быть более совместимы со старыми клиентами.\n"
-""
+"Управляет MIME-типом, который Suwayomi отправляет в OPDS-записях для CBZ "
+"архивов. Также влияет на глобальную загрузку CBZ.\n"
+"Новый следует современному стандарту IANA (2017), тогда как LEGACY "
+"(устаревший MIME-тип для .cbz) и COMPATIBLE (устаревший MIME-тип для всех "
+"комикс-архивов) могут быть более совместимы со старыми клиентами."
 
 #: src/features/settings/Settings.constants.ts
 #: src/features/settings/Settings.constants.ts
@@ -589,30 +595,30 @@ msgid "Copied to clipboard"
 msgstr "Скопированно в буфер обмена"
 
 #: src/features/manga/components/details/MangaDetails.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 msgid "Copy"
 msgstr "Скопировать"
 
 #: src/features/manga/hooks/useManageMangaLibraryState.tsx
 msgid "Could not add manga to library!"
-msgstr "Не получилось добавить мангу в библиотеку!"
+msgstr "Не удалось добавить мангу в библиотеку!"
 
 #: src/features/app-updates/components/VersionInfo.tsx
 msgid "Could not check for update"
-msgstr "Не получилось проверить обновления"
+msgstr "Не удалось проверить обновления"
 
 #: src/features/updates/components/UpdateChecker.tsx
 msgid "Could not check for updates"
-msgstr "Не получилось проверить наличие обновлений"
+msgstr "Не удалось проверить наличие обновлений"
 
 #: src/features/settings/screens/ImagesSettings.tsx
 msgid "Could not clear the cache"
-msgstr "Не получилось очистить кэш"
+msgstr "Не удалось очистить кэш"
 
 #: src/features/backup/screens/Backup.tsx
 #: src/features/backup/screens/Backup.tsx
 msgid "Could not create backup"
-msgstr "Не получилось создать бэкап"
+msgstr "Не удалось создать бэкап"
 
 #: src/features/category/components/CreateOrEditCategoryDialog.tsx
 msgid "Could not create category"
@@ -657,7 +663,7 @@ msgstr "Не удалось загрузить информацию отслеж
 
 #: src/features/manga/Manga.constants.ts
 msgid "Could not migrate manga"
-msgstr "Не получилось мигрировать мангу"
+msgstr "Не удалось мигрировать мангу"
 
 #: src/features/downloads/screens/DownloadQueue.tsx
 msgid "Could not remove all downloads from the queue"
@@ -665,7 +671,7 @@ msgstr "Не удалось удалить все загрузки из очер
 
 #: src/features/library/screens/LibrarySettings.tsx
 msgid "Could not remove non library manga from categories"
-msgstr "Не получилось удалить мангу, не относящуюся к библиотеке, из категорий"
+msgstr "Не удалось удалить мангу, не относящуюся к библиотеке, из категорий"
 
 #: src/features/downloads/components/DownloadQueueChapterCard.tsx
 msgid "Could not remove the download from the queue."
@@ -674,7 +680,7 @@ msgstr "Не удалось удалить загрузку из очереди.
 #: src/features/backup/screens/Backup.tsx
 #: src/features/backup/screens/Backup.tsx
 msgid "Could not restore backup"
-msgstr "Не получилось восстановить из резервной копии"
+msgstr "Не удалось восстановить резервную копию"
 
 #: src/features/chapter/components/buttons/ChapterDownloadRetryButton.tsx
 msgid "Could not retry failed download."
@@ -715,11 +721,11 @@ msgstr "Не удалось убрать из отслеживания манг�
 #: src/features/app-updates/components/WebUIUpdateChecker.tsx
 #: src/features/app-updates/components/WebUIUpdateChecker.tsx
 msgid "Could not update WebUI"
-msgstr "Не получилось обновить WebUI"
+msgstr "Не удалось обновить WebUI"
 
 #: src/features/backup/screens/Backup.tsx
 msgid "Could not validate backup"
-msgstr "Не получилось проверить резервную копию"
+msgstr "Не удалось проверить резервную копию"
 
 #: src/features/category/components/CategorySelect.tsx
 #: src/features/device/screens/DeviceSetting.tsx
@@ -826,7 +832,7 @@ msgstr "База данных"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Database url"
-msgstr "URL базы данных"
+msgstr "url базы данных"
 
 #: src/features/reader/hotkeys/settings/components/ReaderSettingHotkey.tsx
 msgid "Decrease auto scroll speed"
@@ -875,7 +881,7 @@ msgstr "Удаление главы после ручной пометки ее 
 msgid "Delete chapters"
 msgstr "Удалять главы"
 
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 msgid "Delete downloaded"
 msgstr "Удалить загруженное"
 
@@ -1118,7 +1124,7 @@ msgstr "Выйти на предыдущую страницу"
 
 #: src/features/extension/info/screens/ExtensionInfo.tsx
 msgid "Extension info"
-msgstr "Информация о дополнении"
+msgstr "Информация о расширении"
 
 #: src/features/browse/screens/BrowseSettings.tsx
 msgid "Extension repositories"
@@ -1178,11 +1184,13 @@ msgid ""
 "\n"
 "After changing this setting go to the \"About\" page and check for a webUI update and install it"
 msgstr ""
-"Возможно, функции и изменения в этой версии еще не полностью готовы и могут привести к ошибкам.\n"
-"Убедитесь, что у вас включено автоматическое резервное копирование, чтобы предотвратить потерю вашей библиотеки!\n"
+"Возможно, функции и изменения в этой версии еще не полностью готовы и могут "
+"привести к ошибкам.\n"
+"Убедитесь, что у вас включено автоматическое резервное копирование, чтобы "
+"предотвратить потерю вашей библиотеки!\n"
 "\n"
-"После изменения этого параметра перейдите на страницу «О приложение», проверьте наличие обновления WebUI и установите его\n"
-""
+"После изменения этого параметра перейдите на страницу «О приложение», "
+"проверьте наличие обновления WebUI и установите его"
 
 #: src/features/settings/screens/Appearance.tsx
 msgid "Feel free to translate the project on"
@@ -1266,7 +1274,7 @@ msgstr "FlareSolverr будет автоматически ротировать 
 
 #: src/features/settings/screens/WebUISettings.tsx
 msgid "Flavor"
-msgstr "Тип WebUI"
+msgstr "Скин"
 
 #: src/features/theme/Themes.ts
 msgid "Forest Dew"
@@ -1395,7 +1403,7 @@ msgstr "Игнорировать автоматические загрузки �
 
 #: src/features/library/screens/LibrarySettings.tsx
 msgid "Ignore filters when searching"
-msgstr "Игнорировать филтры во время поиска"
+msgstr "Игнорировать фильтры во время поиска"
 
 #: src/features/downloads/screens/DownloadSettings.tsx
 msgid "Ignore re-uploaded chapters"
@@ -1427,16 +1435,19 @@ msgstr "Картинки"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Improves performance, but may cause issues for some installations where data cannot be read from the database"
-msgstr "Улучшает качество ю, но может вызвать проблемы на установках где нельзя прочитать данные из базы данных"
+msgstr ""
+"Улучшает качество, но может вызвать проблемы на установках где нельзя "
+"прочитать данные из базы данных"
 
 #: src/features/settings/screens/ImageProcessingSetting.tsx
 msgid ""
 "In case no MIME-Type is defined, the \"default\" one will be used for the processing.\n"
 "Set the target mode to disabled to prevent processing for a MIME-Type"
 msgstr ""
-"Если MIME-тип не определён, для обработки будет использоваться «стандартный» (default). \n"
-"Установите целевой режим в значение«отключён», чтобы предотвратить обработку для определённого MIME-типа.\n"
-""
+"Если MIME-тип не определён, для обработки будет использоваться «стандартный» "
+"(default). \n"
+"Установите целевой режим в значение «отключён», чтобы предотвратить "
+"обработку для определённого MIME-типа"
 
 #: src/features/manga/components/details/MangaDetails.tsx
 #: src/features/manga/components/MangaBadges.tsx
@@ -1554,7 +1565,9 @@ msgstr "Оставить локально"
 
 #: src/features/reader/settings/behaviour/ReaderBehaviourSettings.tsx
 msgid "Keep previous and upcoming chapters visible while reading in continuous reading modes, allowing seamless scrolling between chapters."
-msgstr "Оставить прошлые и последующие главы видимыми в режиме длинной полоски, позволяя перемещается между главами безшовно."
+msgstr ""
+"Оставить прошлые и последующие главы видимыми в режиме длинной полоски, "
+"позволяя перемещается между главами бесшовно."
 
 #: src/features/settings/Settings.constants.ts
 msgid "Keep remote"
@@ -1668,7 +1681,7 @@ msgstr "Ограничить ширину читалки"
 
 #: src/features/downloads/screens/DownloadSettings.tsx
 msgid "Limit the amount of new chapters that are going to get downloaded."
-msgstr "Ограничьте количество загружаемых новых глав."
+msgstr "Ограничить количество загружаемых новых глав."
 
 #: src/features/settings/screens/About.tsx
 msgid "Links"
@@ -1709,11 +1722,11 @@ msgstr "Очистка файла журнала"
 #: src/features/authentication/screens/LoginPage.tsx
 #: src/features/backup/component/BackupValidationDialog.tsx
 msgid "Log in"
-msgstr "Залогиниться"
+msgstr "Войти"
 
 #: src/base/components/modals/LoginDialog.tsx
 msgid "Log out"
-msgstr "Разлогиниться"
+msgstr "Выйти"
 
 #: src/features/tracker/components/cards/SettingsTrackerCard.tsx
 msgid "Logged in"
@@ -1732,9 +1745,9 @@ msgid ""
 "This makes it possible to have e.g. different settings on a desktop and a smartphone"
 msgstr ""
 "Управляйте существующими устройствами.\n"
-"Настройки пользовательского интерфейса, хранящиеся на сервере, относятся к каждому устройству.\n"
-"Это позволяет иметь разные настройки, например, на настольном компьютере и смартфоне\n"
-""
+"Настройки пользовательского интерфейса, хранящиеся на сервере, относятся к "
+"каждому устройству.\n"
+"Это позволяет иметь разные настройки, например, на компьютере и смартфоне"
 
 #: src/features/manga/Manga.constants.ts
 #: src/features/manga/screens/Manga.tsx
@@ -1779,7 +1792,7 @@ msgstr "Отметить главы прочитанными при загруз
 
 #: src/features/chapter/components/actions/ChapterActionMenuItems.tsx
 msgid "Mark previous as read"
-msgstr "Пометить все предыдущее как прочитанное"
+msgstr "Пометить предыдущее как прочитанное"
 
 #: src/features/chapter/Chapter.constants.ts
 msgid "Mark selected as read"
@@ -1810,12 +1823,12 @@ msgstr "Меню"
 #: src/features/manga/components/MangaToolbarMenu.tsx
 #: src/features/manga/Manga.constants.ts
 #: src/features/manga/Manga.constants.ts
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 #: src/features/migration/screens/Migrate.tsx
 msgid "Migrate"
 msgstr "Мигрировать"
 
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 msgid "Migrating manga…"
 msgstr "Миграция манги…"
 
@@ -1942,7 +1955,7 @@ msgstr "Ещё не выпущено"
 
 #: src/features/tracker/Tracker.constants.ts
 msgid "Novel"
-msgstr "Новеллы"
+msgstr "Новелла"
 
 #: src/features/downloads/components/DownloadAheadSetting.tsx
 msgid "Number of unread chapters to download"
@@ -2395,7 +2408,7 @@ msgstr "Количество прокручивания"
 
 #: src/features/reader/hotkeys/settings/components/ReaderSettingHotkey.tsx
 msgid "Scroll backward"
-msgstr "Пррлистывать назад"
+msgstr "Пролистывать назад"
 
 #: src/features/reader/hotkeys/settings/components/ReaderSettingHotkey.tsx
 msgid "Scroll forward"
@@ -2415,8 +2428,8 @@ msgid ""
 "Limit search to your lists via \"my:<Title>\" (e.g. \"my:One Piece\")"
 msgstr ""
 "Ищите идентификатор с помощью \"id:<ID>\" (например, \"id: 13\")\n"
-"Ограничьте поиск своими списками с помощью \"my:<Title>\" (например, \"my: One Piece\")\n"
-""
+"Ограничьте поиск своими списками с помощью \"my:<Title>\" (например, "
+"\"my:One Piece\")"
 
 #: src/features/settings/components/images/Processing.tsx
 msgid "Search parameters"
@@ -2437,13 +2450,12 @@ msgstr "Посмотрите <0>FlareSolverr</0> для подробной ин�
 #: src/features/theme/components/CreateThemeDialog.tsx
 msgid "See the official <0>MUI documentation</0> for how to customize the theme.<1/>The palette API is not supported, you have to use the new <2>color schemes API</2>.<3/><4/>You can use theme creators like <5>MUI Theme Creator</5>, however, you have to adjust the created object according to the new color schemes API.<6/><7/>In case no background is defined, a background will be calculated based on the primary color."
 msgstr ""
-"Посмотрите офицальнльную <0>документацию MUI</0> чтобы узнать как сделать свою тему.\n"
-"«Palette API» неподерживается, поэтому используйте новую<1>«color schemes API»</1>.\n"
-"\n"
-"Вы также можете использовать генераторы тем, например: <2>MUI Theme Creator</2>, однако, созданные объекты нужно будет настроить под новый API.\n"
-"\n"
-"Если задний фон не определен, он будет выбран основываясь на основных цветах\n"
-""
+"Посмотрите официальную <0>документацию MUI</0>, чтобы узнать как настраивать "
+"тему.<1/>API палитра не поддерживается, поэтому используйте новые<2>цветовые "
+"схемы API</2>.<3/><4/>Вы можете использовать генераторы тем, такие как <5>"
+"MUI Theme Creator</5>, однако созданные объекты нужно будет настроить под "
+"новые цветовые схемы API.<6/><7/>В случае если задний фон не задан, он будет "
+"выбран на базе основного цвета."
 
 #: src/features/chapter/components/actions/ChapterActionMenuItems.tsx
 #: src/features/chapter/components/cards/ChapterCard.tsx
@@ -2461,10 +2473,6 @@ msgstr "Выберите устройство, чтобы использоват
 #: src/base/components/settings/CheckboxListSetting.tsx
 msgid "Select all"
 msgstr "Выбрать все"
-
-#: src/features/migration/components/MigrateDialog.tsx
-msgid "Select data to include"
-msgstr "Выберите данные для включения"
 
 #: src/features/reader/filters/settings/components/ReaderSettingSepia.tsx
 msgid "Sepia"
@@ -2542,7 +2550,7 @@ msgid "Show continue reading button"
 msgstr "Кнопка продолжить чтение"
 
 #: src/features/manga/hooks/useManageMangaLibraryState.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 msgid "Show entry"
 msgstr "Показать записи"
 
@@ -2596,12 +2604,12 @@ msgstr "Отображение диалогового окна выбора ка
 
 #: src/features/reader/settings/behaviour/ReaderBehaviourSettings.tsx
 msgid "Show transition page"
-msgstr "Показывать страниц перехода"
+msgstr "Показывать страницу перехода"
 
 #: src/features/settings/screens/ServerSettings.tsx
 #: src/features/settings/screens/WebUISettings.tsx
 msgid "Shows a dialog in case a new version is available"
-msgstr "Показывает предупреждение, если доступна новая версия"
+msgstr "Показывать диалоговое окно, если доступна новая версия"
 
 #: src/features/settings/Settings.constants.ts
 msgid "Simple Login"
@@ -2665,9 +2673,8 @@ msgid ""
 "Something went wrong\n"
 "An error occurred that we cannot recover from"
 msgstr ""
-"Что-то пошло не так.\n"
-"произошла ошибка, которую мы не можем исправить\n"
-""
+"Что-то пошло не так\n"
+"Произошла ошибка, которую мы не можем исправить"
 
 #: src/features/chapter/components/ChapterOptions.tsx
 #: src/features/library/components/LibraryOptionsPanel.tsx
@@ -2706,7 +2713,7 @@ msgstr "Начато"
 
 #: src/features/reader/overlay/navigation/desktop/ReaderNavBarDesktop.tsx
 msgid "Static navigation"
-msgstr "Статическая перемещение"
+msgstr "Статическое перемещение"
 
 #: src/features/library/components/LibraryOptionsPanel.tsx
 #: src/features/manga/components/details/MangaDetails.tsx
@@ -2812,10 +2819,9 @@ msgid ""
 "Current: {currentScanlator}\n"
 "Next: {nextScanlator}"
 msgstr ""
-"У следующей главы другой сканлейтер\n"
-"Сейчас: {currentScanlator}\n"
-"Следующей: {nextScanlator}\n"
-""
+"У следующей главы другой сканлейтер.\n"
+"Текущая: {currentScanlator}\n"
+"Следующая: {nextScanlator}"
 
 #: src/features/backup/screens/Backup.tsx
 msgid "The path to the directory on the server where automated backups should get saved in"
@@ -2839,10 +2845,9 @@ msgid ""
 "Previous: {nextScanlator}\n"
 "Current: {currentScanlator}"
 msgstr ""
-"У пердыдущей главы другой сканлейтер\n"
-"Предыдущий: {currentScanlator}\n"
-"Текущий: {nextScanlator}\n"
-""
+"У предыдущей главы другой сканлейтер.\n"
+"Предыдущая: {nextScanlator}\n"
+"Текущая: {currentScanlator}"
 
 #: src/features/theme/components/CreateThemeDialog.tsx
 msgid "The theme name must be unique and has a limit of 16 characters"
@@ -2922,7 +2927,9 @@ msgstr "Отслеживание"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Track and update your reading progress by page for each chapter during page streaming"
-msgstr "Отслеживайте и обновляйте прогресс чтения по страницам для каждой главы во время потоковой передачи страниц."
+msgstr ""
+"Отслеживайте и обновляйте прогресс чтения по страницам для каждой главы во "
+"время потоковой передачи страниц"
 
 #: src/features/tracker/components/cards/TrackerActiveCard.tsx
 #: src/features/tracker/components/TrackerSearch.tsx
@@ -2948,7 +2955,7 @@ msgstr "Отслеживания"
 
 #: src/features/backup/Backup.constants.ts
 #: src/features/manga/components/TrackMangaButton.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 #: src/features/settings/screens/Settings.tsx
 #: src/features/tracker/screens/TrackingSettings.tsx
 msgid "Tracking"
@@ -3107,9 +3114,9 @@ msgid ""
 "Use a custom WebUI.\n"
 "To use a custom WebUI replace the content of the \"webUI\" directory in the root directory on the server with the files of the custom WebUI"
 msgstr ""
-"Используйте кастомную WebUI.\n"
-"Для использования кастомной WebUI замените содержимое каталога «webUI» в корневом каталоге на сервере на файлы пользовательского каталога WebUI\n"
-""
+"Используйте кастомный WebUI.\n"
+"Для использования кастомного WebUI замените содержимое каталога «webUI» в "
+"корневом каталоге на сервере файлами кастомного WebUI"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Use SOCKS proxy"
@@ -3317,11 +3324,11 @@ msgstr ""
 #: src/features/chapter/Chapter.constants.ts
 msgid "{count, plural, one {Chapter bookmark removed} other {# chapter bookmarks removed}}"
 msgstr ""
-"{count, plural, one {Закладка главы удалена} other {# закладок глав удалены}}"
+"{count, plural, one {Закладка главы удалена} other {# закладки глав удалены}}"
 
 #: src/features/chapter/Chapter.constants.ts
 msgid "{count, plural, one {Chapter bookmarked} other {# chapters bookmarked}}"
-msgstr "{count, plural, one {Закладка в главе} other {# закладок в главах}}"
+msgstr "{count, plural, one {Закладка в главе} other {# закладки в главах}}"
 
 #. placeholder {0}: autoScroll.value
 #. placeholder {0}: serverSettings.flareSolverrTimeout
@@ -3440,7 +3447,7 @@ msgstr "{count, plural, one {Следующая глава} other {Следую�
 #: src/features/manga/Manga.constants.ts
 msgid "{count, plural, one {Removed manga from the library} other {Removed # manga from the library}}"
 msgstr ""
-"{count, plural, one {Удалена манга из библиотеки} other {Удалено # манги из "
+"{count, plural, one {Удалена манга из библиотеки} other {Удалена # манга из "
 "библиотеки}}"
 
 #: src/features/manga/Manga.constants.ts
@@ -3461,7 +3468,7 @@ msgid ""
 "Suwayomi is not a mass downloader and too many downloads can get you banned from sources and/or cause performance issues.}}"
 msgstr ""
 "{count, plural, one {Вы собираетесь загрузить одну главу} other {Вы "
-"собираетесь загрузить # глав.\n"
+"собираетесь загрузить # главы.\n"
 "Suwayomi не является массовым загрузчиком, и слишком большое количество "
 "загрузок может привести к блокировке доступа к исходникам и/или вызвать "
 "проблемы с производительностью.}}"
@@ -3470,7 +3477,7 @@ msgstr ""
 msgid "{count, plural, one {You are about to mark one chapter as read} other {You are about to mark # chapters as read}}"
 msgstr ""
 "{count, plural, one {Вы собираетесь отметить одну главу как прочитанную} "
-"other {Вы собираетесь отметить # глав как прочитанные}}"
+"other {Вы собираетесь отметить # главы как прочитанные}}"
 
 #: src/features/chapter/Chapter.constants.ts
 msgid "{count, plural, one {You are about to mark one chapter as unread} other {You are about to mark # chapters as unread}}"
@@ -3502,7 +3509,7 @@ msgstr "{currentDownloadAheadLimit, plural, one {# Глава} other {# Глав
 #: src/features/chapter/components/MissingChaptersInfoSeparator.tsx
 msgid "{missingChapterCount, plural, one {Missing # chapter} other {Missing # chapters}}"
 msgstr ""
-"{missingChapterCount, plural, one {Отсутствует # глава} other {Отсутствует # "
+"{missingChapterCount, plural, one {Отсутствует # глава} other {Отсутствуют # "
 "главы}}"
 
 #: src/features/backup/Backup.utils.ts
@@ -3520,14 +3527,14 @@ msgstr ""
 
 #: src/features/category/components/CategoriesInclusionSetting.tsx
 #: src/features/category/components/CategoriesInclusionSetting.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 msgid "Category"
 msgstr "Категория"
 
 #: src/features/chapter/components/cards/ChapterCard.tsx
 #: src/features/downloads/components/DownloadAheadSetting.tsx
 #: src/features/downloads/screens/DownloadSettings.tsx
-#: src/features/migration/components/MigrateDialog.tsx
+#: src/features/migration/components/MigrationSingleMangaDialog.tsx
 #: src/features/reader/overlay/navigation/desktop/components/ReaderNavBarDesktopChapterNavigation.tsx
 #: src/features/reader/overlay/navigation/desktop/components/ReaderNavBarDesktopChapterNavigation.tsx
 #: src/features/tracker/components/cards/TrackerActiveCard.tsx
@@ -3597,7 +3604,7 @@ msgid ""
 msgstr ""
 "{count, plural, one {Здесь отсутствует # глава.\n"
 "Текущая: {currentChapter}\n"
-"Следующая: {nextChapter}} other {Здесь отсутствует # глав.\n"
+"Следующая: {nextChapter}} other {Здесь отсутствуют # главы.\n"
 "Текущая: {currentChapter}\n"
 "Следующая: {nextChapter}}}"
 
@@ -3611,7 +3618,7 @@ msgid ""
 msgstr ""
 "{count, plural, one {Здесь отсутствует # глава.\n"
 "Предыдущая: {nextChapter}\n"
-"Текущая: {currentChapter}} other {Здесь отсутствует # глав.\n"
+"Текущая: {currentChapter}} other {Здесь отсутствуют # главы.\n"
 "Предыдущая: {nextChapter}\n"
 "Текущая: {currentChapter}}}"
 
@@ -3755,7 +3762,7 @@ msgstr "Сервер был обновлен до версии {version} ({0})"
 #: src/features/settings/screens/WebUISettings.tsx
 msgid "Shows a dialog in case the version got updated. This dialog will be shown in case an app refresh is required, regardless of this setting."
 msgstr ""
-"Показывает диалоговое окно, если версия была обновлена. Это диалоговое окно "
+"Показывать диалоговое окно, если версия была обновлена. Это диалоговое окно "
 "будет отображаться в случае, если требуется обновить приложение, независимо "
 "от этого параметра."
 

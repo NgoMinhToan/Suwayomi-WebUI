@@ -7,7 +7,8 @@
  */
 
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useLayoutEffect } from 'react';
+import type { PropsWithChildren } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
 import { loadable } from 'react-lazily/loadable';
@@ -32,12 +33,20 @@ import { defaultPromiseErrorHandler } from '@/lib/DefaultPromiseErrorHandler.ts'
 import { ReactRouter } from '@/lib/react-router/ReactRouter.ts';
 import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { ImageProcessingType } from '@/features/settings/Settings.types.ts';
+import { MigrationFABIndicator } from '@/features/migration/components/MigrationFABIndicator.tsx';
+import { MigrationManager } from '@/features/migration/MigrationManager.ts';
+import { SplashScreen } from '@/features/authentication/components/SplashScreen.tsx';
+import { d } from 'koration';
 
 const { Browse } = loadable(() => import('@/features/browse/screens/Browse.tsx'), lazyLoadFallback);
 const { DownloadQueue } = loadable(() => import('@/features/downloads/screens/DownloadQueue.tsx'), lazyLoadFallback);
 const { Library } = loadable(() => import('@/features/library/screens/Library.tsx'), lazyLoadFallback);
 const { Manga } = loadable(() => import('@/features/manga/screens/Manga.tsx'), lazyLoadFallback);
 const { SearchAll } = loadable(() => import('@/features/global-search/screens/SearchAll.tsx'), lazyLoadFallback);
+const { MigrationManualSearch } = loadable(
+    () => import('@/features/migration/screens/MigrationManualSearch.tsx'),
+    lazyLoadFallback,
+);
 const { Settings } = loadable(() => import('@/features/settings/screens/Settings.tsx'), lazyLoadFallback);
 const { About } = loadable(() => import('@/features/settings/screens/About.tsx'), lazyLoadFallback);
 const { Backup } = loadable(() => import('@/features/backup/screens/Backup.tsx'), lazyLoadFallback);
@@ -69,7 +78,7 @@ const { ImageProcessingSetting } = loadable(
 const { ServerSettings } = loadable(() => import('@/features/settings/screens/ServerSettings.tsx'), lazyLoadFallback);
 const { BrowseSettings } = loadable(() => import('@/features/browse/screens/BrowseSettings.tsx'), lazyLoadFallback);
 const { WebUISettings } = loadable(() => import('@/features/settings/screens/WebUISettings.tsx'), lazyLoadFallback);
-const { Migrate } = loadable(() => import('@/features/migration/screens/Migrate.tsx'), lazyLoadFallback);
+const { Migration } = loadable(() => import('@/features/migration/screens/Migration.tsx'), lazyLoadFallback);
 const { DeviceSetting } = loadable(() => import('@/features/device/screens/DeviceSetting.tsx'), lazyLoadFallback);
 const { TrackingSettings } = loadable(
     () => import('@/features/tracker/screens/TrackingSettings.tsx'),
@@ -106,6 +115,55 @@ const ScrollToTop = () => {
     }, [pathname]);
 
     return null;
+};
+
+const InitializeGuard = ({ children }: PropsWithChildren) => {
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    useEffect(() => {
+        type RequestConfig = [string, () => Promise<unknown>][];
+        type InFlightRequest = [string, Promise<unknown>];
+
+        const initialRequests: RequestConfig = [
+            ['globalMeta', () => requestManager.getGlobalMeta().response],
+            ['serverSettings', () => requestManager.getServerSettings().response],
+        ];
+
+        const executeRequests = async (requests: RequestConfig, timeout: number = d(5).seconds.inWholeMilliseconds) => {
+            const runningRequests = requests.map(([key, fn]) => [key, fn()] satisfies InFlightRequest);
+
+            const failedRequests = runningRequests.filter(async ([_, request]) => {
+                try {
+                    await request;
+
+                    return false;
+                } catch (e) {
+                    return true;
+                }
+            });
+
+            if (failedRequests.length) {
+                await new Promise((resolve) => {
+                    setTimeout(resolve, timeout);
+                });
+
+                return executeRequests(
+                    requests.filter(([key]) => !failedRequests.some(([k]) => k === key)),
+                    (timeout * 1.5) % d(2).minutes.inWholeMilliseconds,
+                );
+            }
+        };
+
+        executeRequests(initialRequests).catch(defaultPromiseErrorHandler('InitializeGuard'));
+
+        setIsInitialized(true);
+    }, []);
+
+    if (isInitialized) {
+        return children;
+    }
+
+    return <SplashScreen />;
 };
 
 const InitialBackgroundRequests = () => {
@@ -146,6 +204,16 @@ const ReactRouterSetter = () => {
 
     useEffect(() => {
         ReactRouter.setNavigateFn(navigate);
+    }, []);
+
+    return null;
+};
+
+const ResumeMigration = () => {
+    useEffect(() => {
+        if (!MigrationManager.isActive()) {
+            MigrationManager.resume().catch(defaultPromiseErrorHandler('ResumeMigration'));
+        }
     }, []);
 
     return null;
@@ -293,9 +361,17 @@ const MainApp = () => {
                         <Route path={AppRoutes.updates.match} element={<Updates />} />
                         {!hideHistory && <Route path={AppRoutes.history.match} element={<History />} />}
                         <Route path={AppRoutes.browse.match} element={<Browse />} />
+                        <Route path={AppRoutes.browse.match} element={<Browse />} />
                         <Route path={AppRoutes.migrate.match}>
-                            <Route index element={<Migrate />} />
-                            <Route path={AppRoutes.migrate.childRoutes.search.match} element={<SearchAll />} />
+                            <Route index element={<Migration />} />
+                            <Route
+                                path={AppRoutes.migrate.childRoutes.singleMangaSearch.match}
+                                element={<SearchAll />}
+                            />
+                            <Route
+                                path={AppRoutes.migrate.childRoutes.manualSearch.match}
+                                element={<MigrationManualSearch />}
+                            />
                         </Route>
                         <Route path={AppRoutes.tracker.match} element={<TrackerOAuthLogin />} />
                     </Route>
@@ -325,20 +401,24 @@ export const App: React.FC = () => (
         <CssBaseline enableColorScheme />
 
         <AuthGuard>
-            <ServerUpdateChecker />
-            <WebUIUpdateChecker />
-            <InitialBackgroundRequests />
-            <BackgroundSubscriptions />
+            <InitializeGuard>
+                <ServerUpdateChecker />
+                <WebUIUpdateChecker />
+                <InitialBackgroundRequests />
+                <BackgroundSubscriptions />
+                <ResumeMigration />
 
-            <Box sx={{ display: 'flex' }}>
-                <Box sx={{ flexShrink: 0, position: 'relative', height: '100vh' }}>
-                    <DefaultNavBar />
+                <Box sx={{ display: 'flex' }}>
+                    <Box sx={{ flexShrink: 0, position: 'relative', height: '100vh' }}>
+                        <DefaultNavBar />
+                    </Box>
+                    <Routes>
+                        <Route path={AppRoutes.matchAll.match} element={<MainApp />} />
+                        <Route path={AppRoutes.reader.match} element={<ReaderApp />} />
+                    </Routes>
                 </Box>
-                <Routes>
-                    <Route path={AppRoutes.matchAll.match} element={<MainApp />} />
-                    <Route path={AppRoutes.reader.match} element={<ReaderApp />} />
-                </Routes>
-            </Box>
+                <MigrationFABIndicator />
+            </InitializeGuard>
         </AuthGuard>
     </AppContext>
 );

@@ -20,6 +20,7 @@ import { VersionUpdateInfoDialog } from '@/features/app-updates/components/Versi
 import { useMetadataServerSettings } from '@/features/settings/services/ServerSettingsMetadata.ts';
 import { useLocalStorage } from '@/base/hooks/useStorage.tsx';
 import { AppRoutes } from '@/base/AppRoute.constants.ts';
+import { STABLE_EMPTY_OBJECT } from '@/base/Base.constants.ts';
 
 const disabledUpdateCheck = () => Promise.resolve();
 
@@ -40,12 +41,11 @@ export const ServerUpdateChecker = () => {
         error: serverUpdateCheckError,
         refetch: checkForUpdate,
     } = requestManager.useCheckForServerUpdate({
-        notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-only',
     });
 
     const { data } = requestManager.useGetAbout();
-    const { aboutServer } = data ?? {};
+    const { aboutServer } = data ?? STABLE_EMPTY_OBJECT;
 
     const selectedServerChannelInfo = serverUpdateCheckData?.checkForServerUpdates?.find(
         (channel) => channel.channel === aboutServer?.buildType,
@@ -62,7 +62,7 @@ export const ServerUpdateChecker = () => {
     const changelogUrl =
         aboutServer?.buildType.toLowerCase() === 'stable'
             ? `https://github.com/Suwayomi/Suwayomi-Server/releases/tag/${aboutServer.version}`
-            : undefined;
+            : 'https://github.com/Suwayomi/Suwayomi-Server/blob/master/CHANGELOG.md';
 
     const isSameAsCurrent = !version || !serverVersion || serverVersion === version;
 
