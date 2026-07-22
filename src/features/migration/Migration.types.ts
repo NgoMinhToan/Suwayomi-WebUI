@@ -6,7 +6,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import type { GetMigratableSourcesQuery } from '@/lib/graphql/generated/graphql.ts';
+import type {
+    ChapterListFieldsFragment,
+    GetMangaToMigrateQuery,
+    GetMangaToMigrateToFetchMutation,
+    GetMigratableSourcesQuery,
+    MangaMigrationFieldsFragment,
+} from '@/lib/graphql/generated/graphql.ts';
 import type {
     SourceDisplayNameInfo,
     SourceIconInfo,
@@ -19,11 +25,19 @@ import type {
     MangaArtistInfo,
     MangaAuthorInfo,
     MangaIdInfo,
+    MangaInLibraryInfo,
     MangaSourceIdInfo,
     MangaThumbnailInfo,
     MangaTitleInfo,
 } from '@/features/manga/Manga.types.ts';
-import type { ChapterNumberInfo } from '@/features/chapter/Chapter.types.ts';
+import type {
+    ChapterBookmarkInfo,
+    ChapterDownloadInfo,
+    ChapterIdInfo,
+    ChapterNumberInfo,
+    ChapterReadInfo,
+} from '@/features/chapter/Chapter.types.ts';
+import type { GqlMetaHolder } from '@/features/metadata/Metadata.types.ts';
 
 export enum SortBy {
     SOURCE_NAME,
@@ -61,6 +75,8 @@ export type MetadataMigrationSettings = {
 export interface MigrationBulkSearchSettings {
     selectHighestChapterNumberSource: boolean;
     ignoreOutdatedMatches: boolean;
+    requireAdditionalChapters: boolean;
+    ignoreWithMissingChapters: boolean;
     performAdvancedSearch: boolean;
 }
 
@@ -74,22 +90,33 @@ export enum MigrationPhase {
 }
 
 export enum MigrationEntryStatus {
-    PENDING = 'pending',
+    SEARCH_PENDING = 'search_pending',
     SEARCHING = 'searching',
     SEARCH_COMPLETE = 'search_complete',
     SEARCH_FAILED = 'search_failed',
-    OUTDATED = 'outdated',
-    NO_MATCH = 'no_match',
+    SEARCH_ABORTED = 'search_aborted',
+    SEARCH_OUTDATED = 'search_outdated',
+    SEARCH_NO_MATCH = 'search_no_match',
+    MIGRATION_PENDING = 'migration_pending',
     MIGRATING = 'migrating',
     MIGRATION_COMPLETE = 'migration_complete',
     MIGRATION_FAILED = 'migration_failed',
+    MIGRATION_ABORTED = 'migration_aborted',
     EXCLUDED = 'excluded',
 }
 
 export interface MigrationMatch
-    extends MangaIdInfo, MangaTitleInfo, MangaThumbnailInfo, MangaSourceIdInfo, MangaArtistInfo, MangaAuthorInfo {
+    extends
+        MangaIdInfo,
+        MangaTitleInfo,
+        MangaThumbnailInfo,
+        MangaSourceIdInfo,
+        MangaArtistInfo,
+        MangaAuthorInfo,
+        Pick<MangaInLibraryInfo, 'inLibrary'> {
     sourceTitle: SourceDisplayNameInfo['displayName'] | undefined;
     latestChapterNumber: ChapterNumberInfo['chapterNumber'] | undefined;
+    missingChapters: number | undefined;
 }
 
 export interface TMigrationEntry {
@@ -98,6 +125,7 @@ export interface TMigrationEntry {
     mangaArtist: MangaArtistInfo['artist'];
     mangaAuthor: MangaAuthorInfo['author'];
     latestChapterNumber: ChapterNumberInfo['chapterNumber'] | undefined;
+    missingChapters: number | undefined;
     mangaThumbnailUrl: MangaThumbnailInfo['thumbnailUrl'] | undefined;
     sourceId: SourceIdInfo['id'];
     sourceTitle: SourceDisplayNameInfo['displayName'] | undefined;
@@ -110,6 +138,7 @@ export interface TMigrationEntry {
     error: string | undefined;
     isExcluded: boolean;
     areMatchesExpanded: boolean;
+    isManualSelection: boolean;
 }
 
 export type MigratableEntry = NonNullableProperty<TMigrationEntry, 'selectedMatchMangaId' | 'selectedMatchSourceId'>;
@@ -123,15 +152,34 @@ export interface MigrationState {
     destinationSourceIds: SourceIdInfo['id'][];
     searchOptions: MigrationBulkSearchSettings | null;
     migrateOptions: Omit<MigrateOptions, 'mangaIdToMigrateTo'> | null;
-    searchProgress: MigrationProgress;
-    migrationProgress: MigrationProgress;
     startedAt: number | null;
     lastUpdatedAt: number | null;
     groupExpandState: Partial<Record<MigrationEntryStatus, boolean>>;
+    isAborted: boolean;
 }
 
 export interface SourceItem extends SourceIdInfo, SourceNameInfo, SourceLanguageInfo, SourceIconInfo, SourceMetaInfo {}
 
 export type TMigratableSource = NonNullable<GetMigratableSourcesQuery['mangas']['nodes'][number]['source']> & {
     mangaCount: number;
+};
+
+export type MangaToMigrate = NonNullable<GetMangaToMigrateQuery['manga']>;
+
+export type MangaToMigrateTo = NonNullable<GetMangaToMigrateToFetchMutation['fetchMangaAndChapters']>['manga'];
+
+export type MigrationChapter = ChapterIdInfo &
+    ChapterReadInfo &
+    ChapterBookmarkInfo &
+    ChapterNumberInfo &
+    ChapterDownloadInfo &
+    GqlMetaHolder;
+
+export type MigrateAction = { copy: () => Promise<unknown>[]; cleanup: () => Promise<unknown>[] };
+
+export type MigrateActionCreator = () => MigrateAction;
+
+export type EntrySourceSearchResult = {
+    manga: MangaMigrationFieldsFragment;
+    chapters: ChapterListFieldsFragment[] | null;
 };

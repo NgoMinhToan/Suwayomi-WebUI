@@ -20,6 +20,19 @@ import {
 import { CHAPTER_META_FIELDS } from '@/lib/graphql/chapter/ChapterFragments.ts';
 import { TRACK_RECORD_BIND_FIELDS } from '@/lib/graphql/tracker/TrackRecordFragments.ts';
 
+export const GET_MANGA_META = gql`
+    ${MANGA_META_FIELDS}
+
+    query GET_MANGA_META($id: Int!) {
+        manga(id: $id) {
+            id
+            meta {
+                ...MANGA_META_FIELDS
+            }
+        }
+    }
+`;
+
 // returns the current manga from the database
 export const GET_MANGA_SCREEN = gql`
     ${MANGA_SCREEN_FIELDS}
@@ -239,8 +252,26 @@ export const GET_MANGAS_DUPLICATES = gql`
 export const GET_MIGRATABLE_SOURCE_MANGAS = gql`
     ${MANGA_MIGRATION_FIELDS}
 
-    query GET_MIGRATABLE_SOURCE_MANGAS($sourceId: LongString!) {
-        mangas(condition: { sourceId: $sourceId, inLibrary: true }) {
+    query GET_MIGRATABLE_SOURCE_MANGAS(
+        $after: Cursor
+        $before: Cursor
+        $condition: MangaConditionInput
+        $filter: MangaFilterInput
+        $first: Int
+        $last: Int
+        $offset: Int
+        $order: [MangaOrderInput!]
+    ) {
+        mangas(
+            after: $after
+            before: $before
+            condition: $condition
+            filter: $filter
+            first: $first
+            last: $last
+            offset: $offset
+            order: $order
+        ) {
             nodes {
                 ...MANGA_MIGRATION_FIELDS
             }

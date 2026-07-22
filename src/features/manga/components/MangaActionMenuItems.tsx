@@ -31,8 +31,16 @@ import { defaultPromiseErrorHandler } from '@/lib/DefaultPromiseErrorHandler.ts'
 import { TrackManga } from '@/features/tracker/components/TrackManga.tsx';
 import { ChaptersDownloadActionMenuItems } from '@/features/chapter/components/actions/ChaptersDownloadActionMenuItems.tsx';
 import { NestedMenuItem } from '@/base/components/menu/NestedMenuItem.tsx';
-import type { MangaChapterStatFieldsFragment, MangaType } from '@/lib/graphql/generated/graphql.ts';
-import type { MangaAction, MangaDownloadInfo, MangaIdInfo, MangaUnreadInfo } from '@/features/manga/Manga.types.ts';
+import type { MangaChapterStatFieldsFragment } from '@/lib/graphql/generated/graphql.ts';
+import type {
+    MangaAction,
+    MangaDownloadInfo,
+    MangaIdInfo,
+    MangaInLibraryInfo,
+    MangaSourceIdInfo,
+    MangaTitleInfo,
+    MangaUnreadInfo,
+} from '@/features/manga/Manga.types.ts';
 import { MANGA_ACTION_TO_TRANSLATION } from '@/features/manga/Manga.constants.ts';
 import { CategorySelect } from '@/features/category/components/CategorySelect.tsx';
 import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
@@ -40,8 +48,13 @@ import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
 type BaseProps = { onClose: () => void; setHideMenu: (hide: boolean) => void };
 
 export type SingleModeProps = {
-    manga: Pick<MangaType, 'id' | 'title' | 'sourceId'> & MangaDownloadInfo & MangaUnreadInfo;
-    handleSelection?: SelectableCollectionReturnType<MangaType['id']>['handleSelection'];
+    manga: MangaIdInfo &
+        MangaTitleInfo &
+        MangaSourceIdInfo &
+        MangaDownloadInfo &
+        MangaUnreadInfo &
+        Pick<MangaInLibraryInfo, 'inLibrary'>;
+    handleSelection?: SelectableCollectionReturnType<MangaIdInfo['id']>['handleSelection'];
 };
 
 type SelectModeProps = {
@@ -69,10 +82,10 @@ export const MangaActionMenuItems = ({
     const shouldShowMenuItem = createShouldShowMenuItem(isSingleMode);
     const isMenuItemDisabled = createIsMenuItemDisabled(isSingleMode);
 
-    const isFullyDownloaded = !!manga && manga.downloadCount === manga.chapters.totalCount;
-    const hasDownloadedChapters = !!manga?.downloadCount;
-    const hasUnreadChapters = !!manga?.unreadCount;
-    const hasReadChapters = !!manga && manga.unreadCount !== manga.chapters.totalCount;
+    const isDownloadable = !!manga && !!manga.chapters.totalCount && !Mangas.isFullyDownloaded(manga);
+    const hasDownloadedChapters = manga && Mangas.isPartiallyDownloaded(manga);
+    const hasUnreadChapters = manga && !!manga.chapters.totalCount && !Mangas.isFullyRead(manga);
+    const hasReadChapters = !!manga && Mangas.isPartiallyRead(manga);
 
     const handleSelect = () => {
         handleSelection?.(manga.id, true);
@@ -108,7 +121,7 @@ export const MangaActionMenuItems = ({
             {!!handleSelection && isSingleMode && (
                 <MenuItem onClick={handleSelect} Icon={CheckBoxOutlineBlank} title={t`Select`} />
             )}
-            {shouldShowMenuItem(!isFullyDownloaded) && (
+            {shouldShowMenuItem(isDownloadable) && (
                 <NestedMenuItem
                     disabled={isMenuItemDisabled(!downloadableMangas.length)}
                     LeftIcon={Download}

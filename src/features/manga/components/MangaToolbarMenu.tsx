@@ -23,14 +23,19 @@ import { AwaitableComponent } from 'awaitable-component';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import { useLingui } from '@lingui/react/macro';
 import { CustomTooltip } from '@/base/components/CustomTooltip.tsx';
-import type { MangaType } from '@/lib/graphql/generated/graphql.ts';
 import { AppRoutes } from '@/base/AppRoute.constants.ts';
 import { CategorySelect } from '@/features/category/components/CategorySelect.tsx';
 import { useMetadataServerSettings } from '@/features/settings/services/ServerSettingsMetadata.ts';
 import { ThemeCreationDialog } from '@/features/theme/components/CreateThemeDialog.tsx';
+import type {
+    MangaIdInfo,
+    MangaInLibraryInfo,
+    MangaSourceIdInfo,
+    MangaTitleInfo,
+} from '@/features/manga/Manga.types.ts';
 
 interface IProps {
-    manga: Pick<MangaType, 'id' | 'inLibrary' | 'sourceId' | 'title'>;
+    manga: MangaIdInfo & MangaInLibraryInfo & MangaSourceIdInfo & MangaTitleInfo;
     onRefresh: () => any;
     refreshing: boolean;
 }
@@ -52,6 +57,7 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
         AwaitableComponent.show(CategorySelect, { mangaId: manga.id });
     };
 
+    // oxlint-disable-next-line unicorn/consistent-function-scoping
     const saveDynamicColorTheme = () => {
         AwaitableComponent.show(ThemeCreationDialog, {
             mode: 'save_dynamic',
@@ -84,12 +90,15 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                         <>
                             <CustomTooltip title={t`Migrate`}>
                                 <Link
-                                    to={AppRoutes.migrate.childRoutes.singleMangaSearch.path(
+                                    to={AppRoutes.migrate.children.singleMangaSearch.path(
                                         manga.sourceId,
                                         manga.id,
                                         manga.title,
                                     )}
-                                    state={{ mangaTitle: manga.title }}
+                                    state={AppRoutes.migrate.children.singleMangaSearch.state({
+                                        title: t`Migrate "${manga.title}"`,
+                                        mode: 'migrate.select.single',
+                                    })}
                                     style={{ textDecoration: 'none', color: 'inherit' }}
                                 >
                                     <IconButton color="inherit">
@@ -158,12 +167,15 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                             <MenuItem
                                 key="migrate"
                                 component={Link}
-                                to={AppRoutes.migrate.childRoutes.singleMangaSearch.path(
+                                to={AppRoutes.migrate.children.singleMangaSearch.path(
                                     manga.sourceId,
                                     manga.id,
                                     manga.title,
                                 )}
-                                state={{ mangaTitle: manga.title }}
+                                state={AppRoutes.migrate.children.singleMangaSearch.state({
+                                    title: t`Migrate "${manga.title}"`,
+                                    mode: 'migrate.select.single',
+                                })}
                                 style={{ textDecoration: 'none', color: 'inherit' }}
                             >
                                 <ListItemIcon>

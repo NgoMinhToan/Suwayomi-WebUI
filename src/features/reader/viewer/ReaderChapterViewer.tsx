@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import { useLingui } from '@lingui/react/macro';
 import type {
     IReaderSettings,
+    ReaderPageBackgroundColor,
     ReaderPagerProps,
     ReaderPageSpreadState,
     ReaderResumeMode,
@@ -52,6 +53,7 @@ const BaseReaderChapterViewer = ({
     retryFailedPagesKeyPrefix,
     readingMode,
     readerWidth,
+    safeAreaInset,
     pageScaleMode,
     shouldOffsetDoubleSpreads,
     readingDirection,
@@ -80,6 +82,7 @@ const BaseReaderChapterViewer = ({
     minWidth,
     minHeight,
     scrollElement,
+    currentChapterRemainingPages,
 }: Pick<ReaderStatePages, 'currentPageIndex' | 'transitionPageMode' | 'retryFailedPagesKeyPrefix'> &
     Omit<ReaderPagerProps, 'pages' | 'totalPages' | 'pageLoadStates' | 'handleAsInitialRender' | 'resumeMode'> &
     Pick<
@@ -121,6 +124,9 @@ const BaseReaderChapterViewer = ({
     );
     const [pagesToSpreadState, setPagesToSpreadState] = useState<ReaderPageSpreadState[]>(
         READER_DEFAULT_PAGES_STATE.pageSpreadStates,
+    );
+    const [pageBackgroundColors, setPageBackgroundColors] = useState<ReaderPageBackgroundColor[]>(
+        READER_DEFAULT_PAGES_STATE.pageBackgroundColors,
     );
 
     const ref = useRef<HTMLDivElement>(null);
@@ -195,6 +201,13 @@ const BaseReaderChapterViewer = ({
 
                     setPageLoadStates(value);
                 },
+                (value) => {
+                    if (isCurrentChapterRef.current) {
+                        getReaderPagesStore().setPageBackgroundColor(value);
+                    }
+
+                    setPageBackgroundColors(value);
+                },
                 readingMode,
             ),
         [actualPages, readingMode],
@@ -249,6 +262,7 @@ const BaseReaderChapterViewer = ({
         actualPages,
         pageLoadStates,
         pagesToSpreadState,
+        pageBackgroundColors,
         arePagesFetched,
         setArePagesFetched,
         (value) => updateState(value, noOp, getReaderChaptersStore().setReaderStateChapters),
@@ -262,6 +276,12 @@ const BaseReaderChapterViewer = ({
                 value,
                 setPagesToSpreadState,
                 getReaderPagesStore().setPageSpreadStates.bind(getReaderPagesStore()),
+            ),
+        (value) =>
+            updateState(
+                value,
+                setPageBackgroundColors,
+                getReaderPagesStore().setPageBackgroundColor.bind(getReaderPagesStore()),
             ),
         (value) => updateState(value, noOp, getReaderPagesStore().setCurrentPageIndex.bind(getReaderPagesStore())),
         (value) => {
@@ -427,10 +447,12 @@ const BaseReaderChapterViewer = ({
                 customFilter={customFilter}
                 shouldStretchPage={shouldStretchPage}
                 readerWidth={readerWidth}
+                safeAreaInset={safeAreaInset}
                 readerNavBarWidth={readerNavBarWidth}
                 isPreloadMode={isPreloadMode}
                 resumeMode={resumeMode}
                 handleAsInitialRender={scrollIntoView}
+                currentChapterRemainingPages={currentChapterRemainingPages}
             />
             {showNextTransitionPage && (
                 <ReaderTransitionPage chapterId={chapterId} type={ReaderTransitionPageMode.NEXT} />

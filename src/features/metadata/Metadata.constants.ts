@@ -200,6 +200,9 @@ export const APP_METADATA: Record<
     hasStatus: {
         convert: convertToObject<LibraryOptions['hasStatus']>,
     },
+    hasSource: {
+        convert: convertToObject<LibraryOptions['hasSource']>,
+    },
     customThemes: {
         convert: convertToObject<MetadataThemeSettings['customThemes']>,
     },
@@ -296,6 +299,9 @@ export const APP_METADATA: Record<
     backgroundColor: {
         convert: convertToNumber, // ReaderBackgroundColor (enum)
     },
+    useAutoBackgroundColorContinuousMode: {
+        convert: convertToBoolean,
+    },
     pageGap: {
         convert: convertToNumber,
         toConstrainedValue: (value: number) => coerceIn(value, PAGE_GAP.min, PAGE_GAP.max),
@@ -327,6 +333,9 @@ export const APP_METADATA: Record<
         convert: convertToBoolean,
     },
     shouldInformAboutScanlatorChange: {
+        convert: convertToBoolean,
+    },
+    shouldWakeLockScreen: {
         convert: convertToBoolean,
     },
     hideHistory: {
@@ -434,6 +443,7 @@ export const GLOBAL_METADATA_KEYS: AppMetadataKeys[] = [
     'hasDuplicateChapters',
     'hasTrackerBinding',
     'hasStatus',
+    'hasSource',
     // sort
     'sortBy',
     'sortDesc',
@@ -724,6 +734,23 @@ export const METADATA_MIGRATIONS: IMetadataMigration[] = [
                         return JSON.stringify(array[0]);
                     },
                 })) satisfies IMetadataMigration['values'])(),
+        ],
+    },
+    {
+        values: [
+            {
+                key: 'browseLanguages',
+                oldValue: /^\[.*]$/g,
+                newValue: (browseLanguagesValue) => {
+                    const convertedBrowseLanguages = convertToObject<string[]>(browseLanguagesValue, []);
+
+                    const convertedToValidIsoCodes = convertedBrowseLanguages.map(
+                        (language) => getISOLanguage(language)?.isoCode ?? language,
+                    );
+
+                    return JSON.stringify(convertedToValidIsoCodes);
+                },
+            },
         ],
     },
 ];

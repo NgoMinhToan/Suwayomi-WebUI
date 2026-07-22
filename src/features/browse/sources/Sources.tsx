@@ -45,7 +45,7 @@ export function Sources({ tabsMenuHeight }: { tabsMenuHeight: number }) {
     const filteredSources = useMemo(
         () =>
             SourceService.filter(sources, {
-                isNsfw: showNsfw ? undefined : true,
+                isNsfw: showNsfw ? undefined : false,
                 languages: shownLangs,
                 keepLocalSource: true,
                 enabled: true,
@@ -55,7 +55,7 @@ export function Sources({ tabsMenuHeight }: { tabsMenuHeight: number }) {
     const sourcesForLanguageFilter = useMemo(
         () =>
             SourceService.filter(sources, {
-                isNsfw: showNsfw ? undefined : true,
+                isNsfw: showNsfw ? undefined : false,
                 removeLocalSource: true,
             }),
         [sources],
@@ -81,7 +81,7 @@ export function Sources({ tabsMenuHeight }: { tabsMenuHeight: number }) {
         [sources],
     );
     const areSourcesFromDifferentRepos = useMemo(
-        () => SourceService.areFromMultipleRepos(filteredSources),
+        () => SourceService.areFromMultipleStores(filteredSources),
         [filteredSources],
     );
     const visibleSources = useMemo(
@@ -107,7 +107,7 @@ export function Sources({ tabsMenuHeight }: { tabsMenuHeight: number }) {
     useAppAction(
         <>
             <CustomTooltip title={t`Global Search`}>
-                <IconButton onClick={() => navigate(AppRoutes.sources.childRoutes.searchAll.path())} color="inherit">
+                <IconButton onClick={() => navigate(AppRoutes.sources.children.searchAll.path())} color="inherit">
                     <TravelExploreIcon />
                 </IconButton>
             </CustomTooltip>

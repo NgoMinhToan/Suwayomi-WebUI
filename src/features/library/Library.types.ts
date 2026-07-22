@@ -6,8 +6,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import type { MangaStatus, MangaType, TrackerType } from '@/lib/graphql/generated/graphql.ts';
+import type { MangaStatus } from '@/lib/graphql/generated/graphql-base.types.ts';
 import type { GridLayout } from '@/base/Base.types.ts';
+import type { MangaDescriptionInfo, MangaIdInfo, MangaTitleInfo } from '@/features/manga/Manga.types.ts';
+import type { TrackerIdInfo } from '@/features/tracker/Tracker.types.ts';
 
 export type MetadataLibrarySettings = {
     showAddToLibraryCategorySelectDialog: boolean;
@@ -26,7 +28,8 @@ export type LibrarySortMode =
     | 'dateAdded'
     | 'lastRead'
     | 'latestFetchedChapter'
-    | 'latestUploadedChapter';
+    | 'latestUploadedChapter'
+    | 'random';
 
 export interface LibraryOptions {
     // sort options
@@ -39,11 +42,12 @@ export interface LibraryOptions {
     hasUnreadChapters: NullAndUndefined<boolean>;
     hasReadChapters: NullAndUndefined<boolean>;
     hasDuplicateChapters: NullAndUndefined<boolean>;
-    hasTrackerBinding: Record<TrackerType['id'], NullAndUndefined<boolean>>;
+    hasTrackerBinding: Record<TrackerIdInfo['id'], NullAndUndefined<boolean>>;
     hasStatus: Record<MangaStatus, NullAndUndefined<boolean>>;
+    hasSource: Record<string, NullAndUndefined<boolean>>;
 }
 
-export type TMangaDuplicate = Pick<MangaType, 'id' | 'title' | 'description'>;
+export type TMangaDuplicate = MangaIdInfo & MangaTitleInfo & MangaDescriptionInfo;
 
 export type TMangaDuplicates<Manga> = Record<string, Manga[]>;
 

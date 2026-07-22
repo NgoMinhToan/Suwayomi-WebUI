@@ -21,20 +21,19 @@ import { AppStorage } from '@/lib/storage/AppStorage.ts';
 export const i18nResources = [
     'ar',
     'de',
+    'el',
     'en',
     'es',
-    'fa',
     'fr',
+    'he',
     'hu',
     'id',
-    'it',
-    'ja',
     'ko',
     'pl',
+    'pt',
     'ru',
     'vi',
     'zh-Hans',
-    'zh-Hant',
 ] as const;
 
 export type I18nResourceCode = (typeof i18nResources)[number];

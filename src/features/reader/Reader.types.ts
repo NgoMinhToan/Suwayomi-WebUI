@@ -69,6 +69,7 @@ export enum ReaderBackgroundColor {
     BLACK,
     GRAY,
     WHITE,
+    AUTO,
 }
 
 export interface ReaderFilterRGBA {
@@ -159,6 +160,7 @@ export interface IReaderSettingsGlobal {
     shouldShowPageNumber: boolean;
     isStaticNav: boolean;
     backgroundColor: ReaderBackgroundColor;
+    useAutoBackgroundColorContinuousMode: boolean;
     hotkeys: Record<ReaderHotkey, string[]>;
     imagePreLoadAmount: number;
     shouldUseAutoWebtoonMode: boolean;
@@ -173,6 +175,7 @@ export interface IReaderSettingsGlobal {
     shouldShowTapZoneLayoutPreview: boolean;
     shouldInformAboutMissingChapter: boolean;
     shouldInformAboutScanlatorChange: boolean;
+    shouldWakeLockScreen: boolean;
     scrollAmount: ReaderScrollAmount;
     shouldUseInfiniteScroll: boolean;
     shouldShowTransitionPage: boolean;
@@ -321,6 +324,10 @@ export interface ReaderStatePages {
     setPageLoadStates: (
         set: ((prevStates: ReaderPageLoadState[]) => ReaderPageLoadState[]) | ReaderPageLoadState[],
     ) => void;
+    pageBackgroundColors: ReaderPageBackgroundColor[];
+    setPageBackgroundColor: (
+        set: ((prev: ReaderPageBackgroundColor[]) => ReaderPageBackgroundColor[]) | ReaderPageBackgroundColor[],
+    ) => void;
     pages: PageData[];
     setPages: (pages: PageData[]) => void;
     transitionPageMode: ReaderTransitionPageMode;
@@ -350,6 +357,7 @@ export interface ReaderPagerProps
             | 'customFilter'
             | 'shouldStretchPage'
             | 'readerWidth'
+            | 'safeAreaInset'
         >,
         Pick<NavbarContextType, 'readerNavBarWidth'> {
     onLoad?: (pagesIndex: number, url: string, isPrimary?: boolean) => void;
@@ -362,6 +370,7 @@ export interface ReaderPagerProps
     resumeMode: ReaderResumeMode;
     handleAsInitialRender: boolean;
     ref?: Ref<HTMLDivElement>;
+    currentChapterRemainingPages: number;
 }
 
 export enum PageInViewportType {
@@ -382,7 +391,7 @@ export enum ReaderResumeMode {
     LAST_READ,
 }
 
-export interface ReaderOpenChapterLocationState {
+export interface RouteStateReader {
     resumeMode?: ReaderResumeMode;
     updateInitialChapter?: boolean;
 }
@@ -393,3 +402,5 @@ export type TReaderStateSettingsContext = {
 };
 
 export type ReaderPageSpreadState = { url: string; isSpread: boolean };
+
+export type ReaderPageBackgroundColor = { url: string; color: string | undefined };

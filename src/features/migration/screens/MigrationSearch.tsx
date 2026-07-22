@@ -20,6 +20,7 @@ import Stack from '@mui/material/Stack';
 import { MigrationEntryStatus } from '@/features/migration/Migration.types.ts';
 import { MigrationEntryGroup } from '@/features/migration/components/MIgrationEntryGroup.tsx';
 import { plural } from '@lingui/core/macro';
+import { MigrationEntries } from '@/features/migration/MigrationEntries.ts';
 
 export const MigrationSearch = () => {
     const { t } = useLingui();
@@ -33,41 +34,36 @@ export const MigrationSearch = () => {
     const entryList = useMemo(() => Object.values(entries), [entries]);
     const searchingEntries = useMemo(
         () =>
-            entryList
-                .filter((entry) =>
-                    [MigrationEntryStatus.PENDING, MigrationEntryStatus.SEARCHING].includes(entry.status),
-                )
-                .toSorted((a, b) => {
-                    if (a.status === MigrationEntryStatus.SEARCHING && b.status !== MigrationEntryStatus.SEARCHING) {
-                        return -1;
-                    }
-
-                    if (a.status !== MigrationEntryStatus.SEARCHING && b.status === MigrationEntryStatus.SEARCHING) {
-                        return 1;
-                    }
-
-                    return entryList.indexOf(a) - entryList.indexOf(b);
-                }),
+            MigrationEntries.getActiveEntriesSorted(
+                entryList,
+                MigrationEntryStatus.SEARCHING,
+                MigrationEntryStatus.SEARCH_PENDING,
+                MigrationEntryStatus.SEARCHING,
+            ),
         [entryList],
     );
     const failedEntries = useMemo(
-        () => entryList.filter((entry) => entry.status === MigrationEntryStatus.SEARCH_FAILED),
+        () => MigrationEntries.getHaveStatusSorted(entryList, MigrationEntryStatus.SEARCH_FAILED),
         [entryList],
     );
     const noMatchEntries = useMemo(
-        () => entryList.filter((entry) => entry.status === MigrationEntryStatus.NO_MATCH),
+        () => MigrationEntries.getHaveStatusSorted(entryList, MigrationEntryStatus.SEARCH_NO_MATCH),
         [entryList],
     );
     const outdatedEntries = useMemo(
-        () => entryList.filter((entry) => entry.status === MigrationEntryStatus.OUTDATED),
+        () => MigrationEntries.getHaveStatusSorted(entryList, MigrationEntryStatus.SEARCH_OUTDATED),
+        [entryList],
+    );
+    const abortedEntries = useMemo(
+        () => MigrationEntries.getHaveStatusSorted(entryList, MigrationEntryStatus.SEARCH_ABORTED),
         [entryList],
     );
     const matchedEntries = useMemo(
-        () => entryList.filter((entry) => entry.status === MigrationEntryStatus.SEARCH_COMPLETE),
+        () => MigrationEntries.getHaveStatusSorted(entryList, MigrationEntryStatus.SEARCH_COMPLETE),
         [entryList],
     );
 
-    const hasMigratableEntries = useMemo(() => !!MigrationManager.getMigratableEntries().length, [entryList]);
+    const hasMigratableEntries = useMemo(() => !!MigrationEntries.getMigratable(entryList).length, [entryList]);
 
     return (
         <>
@@ -99,7 +95,7 @@ export const MigrationSearch = () => {
                     color="error"
                 />
                 <MigrationEntryGroup
-                    status={MigrationEntryStatus.NO_MATCH}
+                    status={MigrationEntryStatus.SEARCH_NO_MATCH}
                     title={plural(noMatchEntries.length, {
                         one: '1 entry with no match',
                         other: '# entries with no match',
@@ -108,12 +104,21 @@ export const MigrationSearch = () => {
                     color="warning"
                 />
                 <MigrationEntryGroup
-                    status={MigrationEntryStatus.OUTDATED}
+                    status={MigrationEntryStatus.SEARCH_OUTDATED}
                     title={plural(outdatedEntries.length, {
                         one: '1 entry with only outdated matches',
                         other: '# entries with only outdated matches',
                     })}
                     entries={outdatedEntries}
+                    color="warning"
+                />
+                <MigrationEntryGroup
+                    status={MigrationEntryStatus.SEARCH_ABORTED}
+                    title={plural(abortedEntries.length, {
+                        one: '1 aborted entry',
+                        other: '# aborted entries',
+                    })}
+                    entries={abortedEntries}
                     color="warning"
                 />
                 <MigrationEntryGroup
@@ -127,9 +132,13 @@ export const MigrationSearch = () => {
                 />
             </Stack>
             <MigrationContinueButton
-                title={t`Start migration`}
-                isDisabled={!isSearchComplete || !hasMigratableEntries}
+                title={!isSearchComplete || !hasMigratableEntries ? t`Abort` : t`Start migration`}
                 onClick={async () => {
+                    if (!isSearchComplete || !hasMigratableEntries) {
+                        await MigrationManager.abort('User aborted search');
+                        return;
+                    }
+
                     try {
                         const options = await AwaitableComponent.show(MigrationOptionsDialog);
                         await MigrationManager.startMigration(options);

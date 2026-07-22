@@ -157,7 +157,7 @@ export const DownloadSettings = () => {
                     onChange={(e) => updateSetting('downloadAsCbz', e.target.checked)}
                 />
             </ListItem>
-            <ListItemLink to={AppRoutes.settings.childRoutes.images.childRoutes.processingDownloads.path}>
+            <ListItemLink to={AppRoutes.settings.children.images.children.processingDownloads.path}>
                 <ListItemText primary={t`Image download processing`} />
             </ListItemLink>
             <List

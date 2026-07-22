@@ -9,50 +9,51 @@
 import type { MangaIdInfo } from '@/features/manga/Manga.types.ts';
 import { MediaQuery } from '@/base/utils/MediaQuery.tsx';
 import { CustomTooltip } from '@/base/components/CustomTooltip.tsx';
-import { CustomButtonIcon } from '@/base/components/buttons/CustomButtonIcon.tsx';
-import { ReactRouter } from '@/lib/react-router/ReactRouter.ts';
-import { AppRoutes } from '@/base/AppRoute.constants.ts';
+import { CustomIconButton } from '@/base/components/buttons/CustomIconButton.tsx';
 import { MigrationManager } from '@/features/migration/MigrationManager.ts';
 import IconButton from '@mui/material/IconButton';
 import { useLingui } from '@lingui/react/macro';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { plural } from '@lingui/core/macro';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export const MigrationEntrySearchExcludeActions = ({
-    hasResults,
+    hasSelectedMatch,
     otherResultsCount,
     isExpanded,
     setIsExpanded,
     isExcluded,
     mangaId,
     mangaTitle,
+    isAborted,
+    isAbortable,
+    isMigrating,
 }: {
-    hasResults: boolean;
+    hasSelectedMatch: boolean;
     otherResultsCount: number;
     isExpanded: boolean;
     setIsExpanded: (expanded: boolean) => void;
     isExcluded: boolean;
     mangaId: MangaIdInfo['id'];
     mangaTitle: string;
+    isAborted: boolean;
+    isAbortable: boolean;
+    isMigrating: boolean;
 }) => {
     const { t } = useLingui();
     const isTabletWidth = MediaQuery.useIsTabletWidth();
 
     if (isTabletWidth) {
-        if (!hasResults) {
-            return;
-        }
-
         return (
             <ButtonGroup variant="contained">
-                {!!otherResultsCount && (
+                {!isMigrating && !!otherResultsCount && (
                     <Button
                         sx={{ flexGrow: 1 }}
                         startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -64,61 +65,83 @@ export const MigrationEntrySearchExcludeActions = ({
                         })}
                     </Button>
                 )}
-                {!isExpanded && (
+                {!isMigrating && !isExpanded && !isAborted && (
                     <CustomTooltip title={t`Manual search`}>
-                        <CustomButtonIcon
+                        <CustomIconButton
                             sx={{
                                 flexGrow: Number(!otherResultsCount),
                             }}
                             onClick={() => {
-                                ReactRouter.navigate(
-                                    AppRoutes.migrate.childRoutes.manualSearch.path(mangaId, mangaTitle),
-                                    {
-                                        state: { mangaTitle: mangaTitle },
-                                    },
-                                );
+                                MigrationManager.openManualSearch(mangaId, mangaTitle);
                             }}
                         >
                             <SearchIcon />
-                        </CustomButtonIcon>
+                        </CustomIconButton>
                     </CustomTooltip>
                 )}
-                <CustomTooltip title={isExcluded ? t`Include` : t`Exclude`}>
-                    <CustomButtonIcon
-                        sx={{
-                            flexGrow: Number(!otherResultsCount),
-                        }}
-                        onClick={() =>
-                            isExcluded ? MigrationManager.includeManga(mangaId) : MigrationManager.excludeManga(mangaId)
-                        }
-                    >
-                        {isExcluded ? <AddIcon /> : <CloseIcon />}
-                    </CustomButtonIcon>
-                </CustomTooltip>
+                {!isMigrating && hasSelectedMatch && !isAborted && (
+                    <CustomTooltip title={isExcluded ? t`Include` : t`Exclude`}>
+                        <CustomIconButton
+                            sx={{
+                                flexGrow: Number(!otherResultsCount),
+                            }}
+                            onClick={() =>
+                                isExcluded
+                                    ? MigrationManager.includeManga(mangaId)
+                                    : MigrationManager.excludeManga(mangaId)
+                            }
+                        >
+                            {isExcluded ? <AddCircleOutlineOutlinedIcon /> : <RemoveCircleOutlineOutlinedIcon />}
+                        </CustomIconButton>
+                    </CustomTooltip>
+                )}
+                {isAbortable && (
+                    <CustomTooltip title={t`Abort`}>
+                        <CustomIconButton
+                            sx={{
+                                flexGrow: Number(!otherResultsCount),
+                            }}
+                            onClick={() => MigrationManager.abortEntry(mangaId)}
+                        >
+                            <CancelOutlinedIcon />
+                        </CustomIconButton>
+                    </CustomTooltip>
+                )}
             </ButtonGroup>
         );
     }
 
     return (
         <Stack sx={{ gap: 1, justifyContent: 'center' }}>
-            <CustomTooltip title={isExcluded ? t`Include` : t`Exclude`} placement="auto">
-                <IconButton
-                    onClick={() =>
-                        isExcluded ? MigrationManager.includeManga(mangaId) : MigrationManager.excludeManga(mangaId)
-                    }
-                >
-                    {isExcluded ? <AddIcon /> : <CloseIcon />}
-                </IconButton>
-            </CustomTooltip>
-            <CustomTooltip title={t`Manual search`} placement="auto">
-                <IconButton
-                    onClick={() => {
-                        ReactRouter.navigate(AppRoutes.migrate.childRoutes.manualSearch.path(mangaId, mangaTitle));
-                    }}
-                >
-                    <SearchIcon />
-                </IconButton>
-            </CustomTooltip>
+            {isAbortable && (
+                <CustomTooltip title={t`Abort`} placement="auto">
+                    <IconButton onClick={() => MigrationManager.abortEntry(mangaId)}>
+                        <CancelOutlinedIcon />
+                    </IconButton>
+                </CustomTooltip>
+            )}
+            {!isMigrating && hasSelectedMatch && !isAborted && (
+                <CustomTooltip title={isExcluded ? t`Include` : t`Exclude`} placement="auto">
+                    <IconButton
+                        onClick={() =>
+                            isExcluded ? MigrationManager.includeManga(mangaId) : MigrationManager.excludeManga(mangaId)
+                        }
+                    >
+                        {isExcluded ? <AddCircleOutlineOutlinedIcon /> : <RemoveCircleOutlineOutlinedIcon />}
+                    </IconButton>
+                </CustomTooltip>
+            )}
+            {!isMigrating && !isAborted && (
+                <CustomTooltip title={t`Manual search`} placement="auto">
+                    <IconButton
+                        onClick={() => {
+                            MigrationManager.openManualSearch(mangaId, mangaTitle);
+                        }}
+                    >
+                        <SearchIcon />
+                    </IconButton>
+                </CustomTooltip>
+            )}
         </Stack>
     );
 };

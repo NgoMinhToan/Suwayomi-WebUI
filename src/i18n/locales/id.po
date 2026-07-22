@@ -24,10 +24,6 @@ msgstr "Tersisa {count}"
 msgid "{progress}% | Updating…"
 msgstr "{progress}% | Memperbarui…"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "<0>Suwayomi does not provide any support for 3rd party repositories or extensions!</0><1/>Use with caution as there could be malicious actors making those repositories.<2/>You as the user need to verify the security and that you trust any repository or extension."
-msgstr "<0>Suwayomi tidak mendukung repositori atau file tambahan pihak ketiga!</0><1/>Gunakan dengan hati-hati karena ada kemungkinan adanya aktor jahat yang membuat repositori tersebut .<2/>Anda sebagai pengguna harus memverifikasi keamanan dan mempercayai repositori dan ekstensi apapun."
-
 #: src/features/library/components/LibraryOptionsPanel.tsx
 msgid "A-Z"
 msgstr "A-Z"
@@ -48,14 +44,6 @@ msgstr "Tambah"
 #: src/features/chapter/Chapter.constants.ts
 msgid "Add bookmark"
 msgstr "Tambahkan ke favorit"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Add repositories from which extensions can be installed"
-msgstr "Tambahkan repositori tempat ekstensi dapat diinstal"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Add repository"
-msgstr "Tambahkan repositori"
 
 #: src/features/manga/components/details/MangaDetails.tsx
 #: src/features/manga/components/MangaBadges.tsx
@@ -327,10 +315,6 @@ msgstr "Tutup"
 #: src/features/library/components/LibraryOptionsPanel.tsx
 msgid "Comfortable grid"
 msgstr "Grid nyaman"
-
-#: src/features/manga/Manga.constants.ts
-msgid "Comic"
-msgstr "Komik"
 
 #: src/base/components/GridLayouts.tsx
 #: src/features/library/components/LibraryOptionsPanel.tsx
@@ -646,10 +630,6 @@ msgstr "Kecualikan penerjemah"
 msgid "Exclude: {excludedCategoriesText}"
 msgstr "Pengecualian: {excludedCategoriesText}"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Extension repositories"
-msgstr "Repositori ekstensi"
-
 #: src/features/backup/screens/Backup.tsx
 #: src/features/backup/screens/Backup.tsx
 #: src/features/browse/extensions/Extensions.tsx
@@ -858,10 +838,6 @@ msgstr "Tipe berkas tidak valid"
 msgid "Invalid input"
 msgstr "Masukan tidak valid"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Invalid repository url"
-msgstr "Alamat url repositori salah"
-
 #: src/features/reader/filters/settings/components/ReaderSettingInvert.tsx
 msgid "Invert"
 msgstr "Balikkan warna"
@@ -960,12 +936,6 @@ msgstr "Keluar"
 #: src/features/tracker/components/cards/SettingsTrackerCard.tsx
 msgid "Logged in"
 msgstr "Masuk"
-
-#: src/features/manga/Manga.constants.ts
-#: src/features/manga/Manga.constants.ts
-#: src/features/manga/Manga.constants.ts
-msgid "Long strip"
-msgstr "Strip panjang"
 
 #: src/features/manga/Manga.constants.ts
 msgid "Manga"
@@ -1762,10 +1732,6 @@ msgstr "Anda memiliki entri di pustaka Anda dengan nama yang sama."
 #: src/features/history/screens/History.tsx
 msgid "You have not read any series yet."
 msgstr "Kamu belum membaca seri apa pun sampai sekarang."
-
-#: src/features/browse/extensions/Extensions.tsx
-msgid "You have to add a extension repository to be able to install extensions"
-msgstr "Anda harus menambahkan repositori ekstensi untuk dapat menginstal ekstensi"
 
 #: src/features/library/screens/Library.tsx
 #: src/features/library/screens/Library.tsx
@@ -2814,10 +2780,6 @@ msgstr "Header ({0})"
 msgid "Hide entries already in library"
 msgstr "Sembunyikan entri yang sudah ada di perpustakaan"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Hide NSFW extensions and sources"
-msgstr "Sembunyikan ekstensi dan sumber NSFW"
-
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Hikari connection pool"
 msgstr "Kumpulan koneksi Hikari"
@@ -3445,10 +3407,6 @@ msgstr "Pengaturan"
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Show icon in system tray"
 msgstr "Tampilkan ikon di baki sistem"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Show NSFW"
-msgstr "Tampilkan NSFW"
 
 #: src/features/settings/screens/ServerSettings.tsx
 msgid "Show only downloaded chapters"

@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-12T20:43:50.941Z\n"
-"PO-Revision-Date: 2026-01-28 12:59+0000\n"
-"Last-Translator: Şükrü Özcan <sukru.ozcan71@gmail.com>\n"
+"PO-Revision-Date: 2026-07-20 01:01+0000\n"
+"Last-Translator: imzekee0 <imzekee0@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/suwayomi/"
 "suwayomi-webui/tr/>\n"
 "Language: tr\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Message-Format: ICU\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: src/features/navigation-bar/NavigationBar.constants.ts
 msgid "{count} remaining"
@@ -26,10 +26,6 @@ msgstr "{progress}% | Güncelleniyor…"
 #: src/features/reader/settings/components/DefaultSettingFootnote.tsx
 msgid "*: Active setting"
 msgstr "*: Etkin ayar"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "<0>Suwayomi does not provide any support for 3rd party repositories or extensions!</0><1/>Use with caution as there could be malicious actors making those repositories.<2/>You as the user need to verify the security and that you trust any repository or extension."
-msgstr "<0>Suwayomi, 3. taraf depolar veya uzantılar için herhangi bir destek sağlamaz!</0><1/>Bu depoları kötü niyetli aktörler tarafından oluşturulabileceğinden dikkatli bir biçimde kullanılmalıdır.<2/>Depo/eklenti güvenilirliğini doğrulamak kullanıcı sorumluluğundadır."
 
 #: src/features/settings/Settings.constants.ts
 msgid "A preview focused web frontend built with svelte"
@@ -64,14 +60,6 @@ msgstr "Ekle"
 #: src/features/chapter/Chapter.constants.ts
 msgid "Add bookmark"
 msgstr "Yer imlerine ekle"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Add repositories from which extensions can be installed"
-msgstr "Uzantıların yüklenebileceği depoları ekleyin"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Add repository"
-msgstr "Depo ekle"
 
 #: src/features/manga/components/details/MangaDetails.tsx
 #: src/features/manga/components/MangaBadges.tsx
@@ -446,10 +434,6 @@ msgstr "Cloudflare baypas"
 #: src/features/library/components/LibraryOptionsPanel.tsx
 msgid "Comfortable grid"
 msgstr "Rahat gösterim"
-
-#: src/features/manga/Manga.constants.ts
-msgid "Comic"
-msgstr "Çizgi roman"
 
 #: src/base/components/GridLayouts.tsx
 #: src/features/library/components/LibraryOptionsPanel.tsx
@@ -917,10 +901,6 @@ msgstr "Hariç Tut: {excludedCategoriesText}"
 msgid "Exit reader"
 msgstr "Okuyucudan çık"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Extension repositories"
-msgstr "Eklenti depoları"
-
 #: src/features/backup/screens/Backup.tsx
 #: src/features/backup/screens/Backup.tsx
 #: src/features/browse/extensions/Extensions.tsx
@@ -1118,10 +1098,6 @@ msgstr "Kütüphanede bulunan girdileri gizle"
 msgid "Hide history"
 msgstr "Geçimişi gizle"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Hide NSFW extensions and sources"
-msgstr "NSFW uzantılarını ve kaynaklarını gizle"
-
 #: src/features/reader/settings/layout/components/ReaderSettingTapZoneInvertMode.tsx
 msgid "Horizontal"
 msgstr "Yatay"
@@ -1242,10 +1218,6 @@ msgstr "Geçersiz girdi"
 #: src/features/theme/components/CreateThemeDialog.tsx
 msgid "Invalid json"
 msgstr "Geçersiz json"
-
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Invalid repository url"
-msgstr "Geçersiz depo url'si"
 
 #: src/features/reader/filters/settings/components/ReaderSettingInvert.tsx
 msgid "Invert"
@@ -1380,12 +1352,6 @@ msgstr "Çıkış yap"
 #: src/features/tracker/components/cards/SettingsTrackerCard.tsx
 msgid "Logged in"
 msgstr "Giriş yapıldı"
-
-#: src/features/manga/Manga.constants.ts
-#: src/features/manga/Manga.constants.ts
-#: src/features/manga/Manga.constants.ts
-msgid "Long strip"
-msgstr "Uzun şerit"
 
 #: src/features/device/screens/DeviceSetting.tsx
 msgid ""
@@ -2065,10 +2031,6 @@ msgstr "Daha az göster"
 msgid "Show more"
 msgstr "Daha fazla göster"
 
-#: src/features/browse/screens/BrowseSettings.tsx
-msgid "Show NSFW"
-msgstr "NSFW'yi göster"
-
 #: src/features/library/components/LibraryOptionsPanel.tsx
 msgid "Show number of items"
 msgstr "Öğe sayısını göster"
@@ -2644,10 +2606,6 @@ msgstr "Kütüphanenizde aynı isimde bir giriş var."
 msgid "You have not read any series yet."
 msgstr "Henüz hiçbir seri okumadınız."
 
-#: src/features/browse/extensions/Extensions.tsx
-msgid "You have to add a extension repository to be able to install extensions"
-msgstr "Eklentileri yükleyebilmek için eklenti deposu eklemelisiniz"
-
 #: src/features/library/screens/Library.tsx
 #: src/features/library/screens/Library.tsx
 msgid "Your library is empty"
@@ -2843,3 +2801,21 @@ msgstr "Yedekleniyor…"
 #: src/features/theme/Themes.ts
 msgid "Default"
 msgstr "Varsayılan"
+
+#: src/features/tracker/Tracker.constants.ts
+msgid "Not yet published"
+msgstr "Henüz yayınlanmadı"
+
+#: src/features/migration/Migration.constants.ts
+msgid "No match found"
+msgstr "Eşleşme bulunamadı"
+
+#: src/features/source/components/SourceLanguageSelect.tsx
+#, fuzzy
+msgid "No sources installed"
+msgstr "Hiçbir kaynak indirilmedi"
+
+#: src/base/utils/Languages.ts
+#: src/features/extension/Extensions.constants.ts
+msgid "Multi"
+msgstr "Çoklu"

@@ -11,17 +11,13 @@ import type { MigrationMatch, TMigrationEntry } from '@/features/migration/Migra
 import { MigrationEntryStatus, MigrationPhase } from '@/features/migration/Migration.types.ts';
 import { MediaQuery } from '@/base/utils/MediaQuery.tsx';
 import { MigrationEntryCard } from '@/features/migration/components/migration-entry/MigrationEntryCard.tsx';
-import { applyStyles } from '@/base/utils/ApplyStyles.ts';
 import { MigrationEntryCardContent } from '@/features/migration/components/migration-entry/MigrationEntryCardContent.tsx';
 import { ENTRY_STATUS_TRANSLATION } from '@/features/migration/Migration.constants.ts';
-import { ReactRouter } from '@/lib/react-router/ReactRouter.ts';
 import { AppRoutes } from '@/base/AppRoute.constants.ts';
 import { MigrationManager } from '@/features/migration/MigrationManager.ts';
-import { extractGraphqlExceptionInfo } from '@/lib/HelperFunctions.ts';
+import { extractGraphqlExceptionInfo, getErrorMessage } from '@/lib/HelperFunctions.ts';
 import { Confirmation } from '@/base/AppAwaitableComponent.ts';
 import { defaultPromiseErrorHandler } from '@/lib/DefaultPromiseErrorHandler.ts';
-import { ListCardAvatar } from '@/base/components/lists/cards/ListCardAvatar.tsx';
-import { Mangas } from '@/features/manga/services/Mangas.ts';
 import { TypographyMaxLines } from '@/base/components/texts/TypographyMaxLines.tsx';
 import { MigrationEntryMetadataText } from '@/features/migration/components/migration-entry/MigrationEntryMetadataText.tsx';
 import Typography from '@mui/material/Typography';
@@ -36,6 +32,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import { applyStyles } from '@/base/utils/ApplyStyles.ts';
+import { MigrationEntryThumbnail } from '@/features/migration/components/migration-entry/MigrationEntryThumbnail.tsx';
+import { makeToast } from '@/base/utils/Toast.ts';
 
 const EntryStatus = ({
     sourceMangaId,
@@ -52,20 +52,15 @@ const EntryStatus = ({
 
     return (
         <Stack sx={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-            <Typography color={status === MigrationEntryStatus.NO_MATCH ? 'warning' : undefined}>
+            <Typography color={status === MigrationEntryStatus.SEARCH_NO_MATCH ? 'warning' : undefined}>
                 {t(ENTRY_STATUS_TRANSLATION[status])}
             </Typography>
-            {!isMigrating && status === MigrationEntryStatus.NO_MATCH && (
+            {!isMigrating && status === MigrationEntryStatus.SEARCH_NO_MATCH && (
                 <Button
                     startIcon={<SearchIcon />}
                     variant="contained"
                     onClick={() => {
-                        ReactRouter.navigate(
-                            AppRoutes.migrate.childRoutes.manualSearch.path(sourceMangaId, sourceMangaTitle),
-                            {
-                                state: { mangaTitle: sourceMangaTitle },
-                            },
-                        );
+                        MigrationManager.openManualSearch(sourceMangaId, sourceMangaTitle);
                     }}
                 >{t`Manual search`}</Button>
             )}
@@ -77,12 +72,11 @@ const EntryError = ({
     id,
     title,
     isMigrating,
-    sourceMangaId,
     error,
+    status,
 }: {
-    sourceMangaId: MangaIdInfo['id'];
     isMigrating: boolean;
-} & Pick<TMigrationEntry, 'error'> &
+} & Pick<TMigrationEntry, 'error' | 'status'> &
     Pick<MigrationMatch, 'id' | 'title'>) => {
     const { t } = useLingui();
 
@@ -142,8 +136,8 @@ const EntryError = ({
                     color="error"
                     startIcon={<ReplayIcon />}
                     onClick={() =>
-                        MigrationManager.retryEntry(sourceMangaId).catch(
-                            defaultPromiseErrorHandler('MigrationEntryRow::retry'),
+                        MigrationManager.retryEntry(id).catch((e) =>
+                            makeToast(t`Could not retry "${title}"`, 'error', getErrorMessage(e)),
                         )
                     }
                 >
@@ -161,21 +155,7 @@ const EntryData = (entry: MigrationMatch) => {
 
     return (
         <>
-            <Link component={RouterLink} to={AppRoutes.manga.path(id)}>
-                <ListCardAvatar
-                    iconUrl={Mangas.getThumbnailUrl(entry)}
-                    alt={title}
-                    slots={{
-                        avatarProps: {
-                            sx: {
-                                width: 'unset',
-                                height: 112,
-                                aspectRatio: '3 / 4',
-                            },
-                        },
-                    }}
-                />
-            </Link>
+            <MigrationEntryThumbnail entry={entry} height={112} />
             <Stack sx={{ minWidth: 0, flex: 1 }}>
                 <Typography
                     variant="overline"
@@ -217,6 +197,7 @@ export const MigrationDestinationEntry = ({
     setIsExpanded: (expanded: boolean) => void;
     isMigrating: boolean;
 }) => {
+    const theme = useTheme();
     const isTabletWidth = MediaQuery.useIsTabletWidth();
 
     return (
@@ -228,29 +209,37 @@ export const MigrationDestinationEntry = ({
                 ...applyStyles(!isTabletWidth, {
                     width: '400px',
                     height: '100%',
+                    [theme.breakpoints.up('lg')]: {
+                        width: '500px',
+                    },
+                    [theme.breakpoints.up(1800)]: {
+                        width: '800px',
+                    },
+                    [theme.breakpoints.up(2200)]: {
+                        width: '1000px',
+                    },
                 }),
             }}
         >
             <MigrationEntryCardContent>
                 {(() => {
+                    if (error) {
+                        return (
+                            <EntryError
+                                id={sourceMangaId}
+                                title={sourceMangaTitle}
+                                error={error}
+                                isMigrating={isMigrating}
+                                status={status}
+                            />
+                        );
+                    }
                     if (!entry) {
                         return (
                             <EntryStatus
                                 sourceMangaId={sourceMangaId}
                                 sourceMangaTitle={sourceMangaTitle}
                                 status={status}
-                                isMigrating={isMigrating}
-                            />
-                        );
-                    }
-
-                    if (error) {
-                        return (
-                            <EntryError
-                                id={entry.id}
-                                title={entry.title}
-                                error={error}
-                                sourceMangaId={sourceMangaId}
                                 isMigrating={isMigrating}
                             />
                         );
@@ -265,7 +254,7 @@ export const MigrationDestinationEntry = ({
                         p: 0,
                         backgroundColor: 'primary.dark',
                         '&:hover': {
-                            backgroundColor: (theme) => theme.alpha(theme.palette.primary.dark, 0.8),
+                            backgroundColor: theme.alpha(theme.palette.primary.dark, 0.8),
                         },
                     }}
                 >

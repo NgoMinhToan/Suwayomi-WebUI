@@ -8,26 +8,27 @@
 
 import { ErrorLink } from '@apollo/client/link/error';
 import { SetContextLink } from '@apollo/client/link/context';
-import { ApolloClient, ApolloLink, CombinedGraphQLErrors, InMemoryCache } from '@apollo/client';
-import { from, filter, map, switchMap, firstValueFrom } from 'rxjs';
+import type { ErrorLike } from '@apollo/client';
+import { ApolloClient, ApolloLink, CombinedGraphQLErrors, InMemoryCache, ServerError } from '@apollo/client';
+import { filter, firstValueFrom, from, map, switchMap } from 'rxjs';
 import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import type { Client } from 'graphql-ws';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import type { TypePolicies } from '@apollo/client/cache';
 import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename';
 import { d } from 'koration';
 import { useId } from '@mantine/hooks';
 import { useEffect } from 'react';
 import type { GraphQLFormattedError } from 'graphql';
 import { BaseClient } from '@/lib/requests/client/BaseClient.ts';
-import type { StrictTypedTypePolicies } from '@/lib/graphql/generated/apollo-helpers.ts';
+import type { TypedTypePolicies } from '@/lib/graphql/generated/apollo-helpers.ts';
 import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import type { UserRefreshMutation } from '@/lib/graphql/generated/graphql.ts';
 import type { AbortableApolloMutationResponse } from '@/lib/requests/RequestManager.ts';
+import type { ChapterNodeList } from '@/lib/graphql/generated/graphql-base.types.ts';
 
-const typePolicies: StrictTypedTypePolicies = {
+const typePolicies: TypedTypePolicies = {
     MangaType: {
         fields: {
             trackRecords: {
@@ -50,6 +51,7 @@ const typePolicies: StrictTypedTypePolicies = {
     CategoryMetaType: { keyFields: ['categoryId', 'key'] },
     SourceMetaType: { keyFields: ['sourceId', 'key'] },
     ExtensionType: { keyFields: ['pkgName'] },
+    ExtensionStoreType: { keyFields: ['indexUrl'] },
     AboutServerPayload: { keyFields: [] },
     AboutWebUI: { keyFields: [] },
     WebUIUpdateInfo: { keyFields: [] },
@@ -72,11 +74,18 @@ const typePolicies: StrictTypedTypePolicies = {
     WebUIUpdateStatus: { keyFields: [] },
     UpdateStatus: { keyFields: [] },
     KoSyncStatusPayload: { keyFields: [] },
+    SyncStatus: { keyFields: [] },
     Query: {
         fields: {
             manga(_, { args, toReference }) {
                 return toReference({
                     __typename: 'MangaType',
+                    id: args?.id,
+                });
+            },
+            chapter(_, { args, toReference }) {
+                return toReference({
+                    __typename: 'ChapterType',
                     id: args?.id,
                 });
             },
@@ -96,6 +105,12 @@ const typePolicies: StrictTypedTypePolicies = {
                 return toReference({
                     __typename: 'ExtensionType',
                     pkgName: args?.pkgName,
+                });
+            },
+            extensionStore(_, { args, toReference }) {
+                return toReference({
+                    __typename: 'ExtensionStoreType',
+                    indexUrl: args?.indexUrl,
                 });
             },
             meta(_, { args, toReference }) {
@@ -124,6 +139,21 @@ const typePolicies: StrictTypedTypePolicies = {
             updateStatus(_, { toReference }) {
                 return toReference({ __typename: 'UpdateStatus', key: {} });
             },
+            lastSyncStatus(_, { toReference }) {
+                return toReference({ __typename: 'SyncStatus', key: {} });
+            },
+            tracker(_, { toReference }) {
+                return toReference({ __typename: 'TrackerType', key: {} });
+            },
+            trackRecord(_, { toReference }) {
+                return toReference({ __typename: 'TrackRecordType', key: {} });
+            },
+            mangas: {
+                keyArgs: ['condition', 'filter', 'orderBy', 'orderByType', 'order'],
+                merge(existing, incoming, { mergeObjects }) {
+                    return mergeObjects(existing, incoming);
+                },
+            },
             chapters: {
                 keyArgs: ['condition', 'filter', 'orderBy', 'orderByType', 'order'],
                 merge(existing, incoming) {
@@ -141,7 +171,7 @@ const typePolicies: StrictTypedTypePolicies = {
 
                     const replaceExistingItems = isReFetch && hasLessItems;
                     if (replaceExistingItems) {
-                        const existingWithReplacedIncoming: typeof incoming = {
+                        const existingWithReplacedIncoming: ChapterNodeList = {
                             ...existing,
                             pageInfo: {
                                 ...existing.pageInfo,
@@ -153,7 +183,7 @@ const typePolicies: StrictTypedTypePolicies = {
                         return existingWithReplacedIncoming;
                     }
 
-                    const existingWithAppendedIncoming: typeof incoming = {
+                    const existingWithAppendedIncoming: ChapterNodeList = {
                         ...existing,
                         pageInfo: {
                             ...existing.pageInfo,
@@ -248,6 +278,31 @@ export class GraphQLClient extends BaseClient<ApolloClient, ApolloClient.Options
         });
     }
 
+    protected override getOriginFromUrl(operation: string): string {
+        return operation;
+    }
+
+    private getRateLimitOrigin(operation: ApolloLink.Operation): string {
+        return `${operation.operationName}::${JSON.stringify(operation.variables)}`;
+    }
+
+    private isRateLimitError(error: ErrorLike): boolean {
+        if (CombinedGraphQLErrors.is(error)) {
+            return error.errors.some(
+                (gqlError) =>
+                    gqlError.message.toLowerCase().includes('http 429') ||
+                    gqlError.message.toLowerCase().includes('http error 429') ||
+                    gqlError.message.toLowerCase().includes('too many requests'),
+            );
+        }
+
+        if (ServerError.is(error)) {
+            return error.statusCode === 429;
+        }
+
+        return false;
+    }
+
     private isAuthError(errors: readonly GraphQLFormattedError[]): boolean {
         return errors.some((graphQLError) =>
             graphQLError.message.includes('suwayomi.tachidesk.server.user.UnauthorizedException'),
@@ -256,9 +311,21 @@ export class GraphQLClient extends BaseClient<ApolloClient, ApolloClient.Options
 
     private createErrorLink() {
         return new ErrorLink(({ error, operation, forward }) => {
+            if (this.isRateLimitError(error)) {
+                this.addRateLimit(
+                    this.getRateLimitOrigin(operation),
+                    operation.getContext()?.headers?.get?.('Retry-After'),
+                );
+
+                return from(this.awaitRateLimit(this.getRateLimitOrigin(operation))).pipe(
+                    switchMap(() => forward(operation)),
+                );
+            }
+
             if (!CombinedGraphQLErrors.is(error)) {
                 return undefined;
             }
+
             if (!this.isAuthError(error.errors)) {
                 return undefined;
             }
@@ -385,14 +452,7 @@ export class GraphQLClient extends BaseClient<ApolloClient, ApolloClient.Options
     protected createClient(createWsClientLazily?: boolean) {
         this.createWSClient(createWsClientLazily);
         this.client = new ApolloClient({
-            cache: new InMemoryCache({
-                // for whatever reason there is some weird TypeError complaining that
-                // "FieldReadFunction<Reference, Reference, FieldFunctionOptions<SomeObject, Record<string, any>>"
-                // is not compatible with "FieldReadFunction<any, any, FieldFunctionOptions<Record<string, any, Record<string, any>>"
-                // Since "typePolicies" is correctly typed as StrictTypedTypePolicies, and it is working as expected,
-                // the TypeError can just be ignored
-                typePolicies: typePolicies as TypePolicies,
-            }),
+            cache: new InMemoryCache({ typePolicies }),
             devtools: { enabled: true },
             link: this.createLink(),
         });
