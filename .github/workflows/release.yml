@@ -7,6 +7,10 @@ on:
         description: 'Release version'
         required: true
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   release:
     name: Create changelog, build artifacts and publish release
@@ -51,10 +55,10 @@ jobs:
         env:
           VERSION_TAG: ${{ steps.GenTagName.outputs.value }}
         run: |
-          yarn ci
-          yarn build
-          yarn build-zip-with-version-tag
-          yarn build-md5
+          pnpm install --frozen-lockfile
+          pnpm run build
+          pnpm run build-zip-with-version-tag
+          pnpm run build-md5
 
       - name: Create Tag
         run: |
