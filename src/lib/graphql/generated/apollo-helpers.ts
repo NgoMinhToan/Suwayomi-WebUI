@@ -96,6 +96,7 @@ export type CategoryTypeKeySpecifier = (
     | 'id'
     | 'includeInDownload'
     | 'includeInUpdate'
+    | 'isDefaultCategory'
     | 'mangas'
     | 'meta'
     | 'name'
@@ -107,6 +108,7 @@ export type CategoryTypeFieldPolicy = {
     id?: FieldPolicy<any> | FieldReadFunction<any>;
     includeInDownload?: FieldPolicy<any> | FieldReadFunction<any>;
     includeInUpdate?: FieldPolicy<any> | FieldReadFunction<any>;
+    isDefaultCategory?: FieldPolicy<any> | FieldReadFunction<any>;
     mangas?: FieldPolicy<any> | FieldReadFunction<any>;
     meta?: FieldPolicy<any> | FieldReadFunction<any>;
     name?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1189,7 +1191,9 @@ export type PartialSettingsTypeKeySpecifier = (
     | 'databaseUsername'
     | 'debugLogsEnabled'
     | 'downloadAsCbz'
+    | 'downloadComicInfoToMangaFolder'
     | 'downloadConversions'
+    | 'downloadCoverToMangaFolder'
     | 'downloadsPath'
     | 'electronPath'
     | 'excludeCompleted'
@@ -1288,7 +1292,9 @@ export type PartialSettingsTypeFieldPolicy = {
     databaseUsername?: FieldPolicy<any> | FieldReadFunction<any>;
     debugLogsEnabled?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadAsCbz?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadComicInfoToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadConversions?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadCoverToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadsPath?: FieldPolicy<any> | FieldReadFunction<any>;
     electronPath?: FieldPolicy<any> | FieldReadFunction<any>;
     excludeCompleted?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1618,7 +1624,9 @@ export type SettingsKeySpecifier = (
     | 'databaseUsername'
     | 'debugLogsEnabled'
     | 'downloadAsCbz'
+    | 'downloadComicInfoToMangaFolder'
     | 'downloadConversions'
+    | 'downloadCoverToMangaFolder'
     | 'downloadsPath'
     | 'electronPath'
     | 'excludeCompleted'
@@ -1717,7 +1725,9 @@ export type SettingsFieldPolicy = {
     databaseUsername?: FieldPolicy<any> | FieldReadFunction<any>;
     debugLogsEnabled?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadAsCbz?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadComicInfoToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadConversions?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadCoverToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadsPath?: FieldPolicy<any> | FieldReadFunction<any>;
     electronPath?: FieldPolicy<any> | FieldReadFunction<any>;
     excludeCompleted?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1867,7 +1877,9 @@ export type SettingsTypeKeySpecifier = (
     | 'databaseUsername'
     | 'debugLogsEnabled'
     | 'downloadAsCbz'
+    | 'downloadComicInfoToMangaFolder'
     | 'downloadConversions'
+    | 'downloadCoverToMangaFolder'
     | 'downloadsPath'
     | 'electronPath'
     | 'excludeCompleted'
@@ -1966,7 +1978,9 @@ export type SettingsTypeFieldPolicy = {
     databaseUsername?: FieldPolicy<any> | FieldReadFunction<any>;
     debugLogsEnabled?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadAsCbz?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadComicInfoToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadConversions?: FieldPolicy<any> | FieldReadFunction<any>;
+    downloadCoverToMangaFolder?: FieldPolicy<any> | FieldReadFunction<any>;
     downloadsPath?: FieldPolicy<any> | FieldReadFunction<any>;
     electronPath?: FieldPolicy<any> | FieldReadFunction<any>;
     excludeCompleted?: FieldPolicy<any> | FieldReadFunction<any>;
