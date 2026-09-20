@@ -1968,7 +1968,9 @@ export type PartialSettingsType = Settings & {
     databaseUsername?: Maybe<Scalars['String']['output']>;
     debugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
     downloadAsCbz?: Maybe<Scalars['Boolean']['output']>;
+    downloadComicInfoToMangaFolder?: Maybe<Scalars['Boolean']['output']>;
     downloadConversions?: Maybe<Array<SettingsDownloadConversionType>>;
+    downloadCoverToMangaFolder?: Maybe<Scalars['Boolean']['output']>;
     downloadsPath?: Maybe<Scalars['String']['output']>;
     electronPath?: Maybe<Scalars['String']['output']>;
     excludeCompleted?: Maybe<Scalars['Boolean']['output']>;
@@ -2072,7 +2074,9 @@ export type PartialSettingsTypeInput = {
     databaseUsername?: InputMaybe<Scalars['String']['input']>;
     debugLogsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
     downloadAsCbz?: InputMaybe<Scalars['Boolean']['input']>;
+    downloadComicInfoToMangaFolder?: InputMaybe<Scalars['Boolean']['input']>;
     downloadConversions?: InputMaybe<Array<SettingsDownloadConversionTypeInput>>;
+    downloadCoverToMangaFolder?: InputMaybe<Scalars['Boolean']['input']>;
     downloadsPath?: InputMaybe<Scalars['String']['input']>;
     electronPath?: InputMaybe<Scalars['String']['input']>;
     excludeCompleted?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2622,7 +2626,9 @@ export type Settings = {
     databaseUsername?: Maybe<Scalars['String']['output']>;
     debugLogsEnabled?: Maybe<Scalars['Boolean']['output']>;
     downloadAsCbz?: Maybe<Scalars['Boolean']['output']>;
+    downloadComicInfoToMangaFolder?: Maybe<Scalars['Boolean']['output']>;
     downloadConversions?: Maybe<Array<SettingsDownloadConversion>>;
+    downloadCoverToMangaFolder?: Maybe<Scalars['Boolean']['output']>;
     downloadsPath?: Maybe<Scalars['String']['output']>;
     electronPath?: Maybe<Scalars['String']['output']>;
     excludeCompleted?: Maybe<Scalars['Boolean']['output']>;
@@ -2779,7 +2785,9 @@ export type SettingsType = Settings & {
     databaseUsername: Scalars['String']['output'];
     debugLogsEnabled: Scalars['Boolean']['output'];
     downloadAsCbz: Scalars['Boolean']['output'];
+    downloadComicInfoToMangaFolder: Scalars['Boolean']['output'];
     downloadConversions: Array<SettingsDownloadConversionType>;
+    downloadCoverToMangaFolder: Scalars['Boolean']['output'];
     downloadsPath: Scalars['String']['output'];
     electronPath: Scalars['String']['output'];
     excludeCompleted: Scalars['Boolean']['output'];

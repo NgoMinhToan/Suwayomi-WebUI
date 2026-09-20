@@ -7,9 +7,9 @@ on:
         description: 'Release version'
         required: true
 
-defaults:
-  run:
-    working-directory: master
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   release:
@@ -22,17 +22,16 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout master branch
+      - name: Checkout selected branch
         uses: actions/checkout@v4
         with:
-          ref: master
-          path: master
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Set up NodeJs
         uses: actions/setup-node@v4
         with:
-          node-version-file: './master/package.json'
+          node-version-file: './package.json'
 
       - uses: pnpm/action-setup@v4.2.0
         name: Install pnpm
@@ -50,21 +49,16 @@ jobs:
         id: GenTagName
         run: |
           genTag="v${{ github.event.inputs.release_version }}"
-          echo "::set-output name=value::$genTag"
+          echo "value=$genTag" >> $GITHUB_OUTPUT
 
       - name: Build webUI
+        env:
+          VERSION_TAG: ${{ steps.GenTagName.outputs.value }}
         run: |
-          pnpm ci
-          pnpm build
-          pnpm build-zip
-          pnpm build-md5
-
-      - name: Rename artifact
-        run: |
-          cd buildZip
-          for file in *.zip; do
-            mv "$file" "${file%-r$(git rev-list HEAD --count).zip}-${{ steps.GenTagName.outputs.value }}.zip"
-          done
+          pnpm install --frozen-lockfile
+          pnpm run build
+          pnpm run build-zip-with-version-tag
+          pnpm run build-md5
 
       - name: Create Tag
         run: |
@@ -78,8 +72,8 @@ jobs:
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "master/buildZip/*"
-          owner: "suwayomi"
+          artifacts: "buildZip/*"
+          owner: "ngominhtoan"
           repo: "Suwayomi-WebUI"
           tag: ${{ steps.GenTagName.outputs.value }}
           draft: true
